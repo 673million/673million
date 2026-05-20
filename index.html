@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>673 MILLIONS | La faim expliquée par les données.</title>
+<meta name="description" content="Plateforme ODD 2. Données FAO, Banque mondiale, WFP."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXX');
+</script>
+
+<style>
+/* === VARIABLES ET THEMES === */
+:root{
+  --navy:#0A1628; --navy2:#0d1d35; --navy3:#111f38;
+  --white:#fff; --gold:#C9A84C; --gold2:rgba(201,168,76,.15); --gold3:rgba(201,168,76,.3);
+  --dim:rgba(255,255,255,.6); --low:rgba(255,255,255,.1);
+  --red:#e05252; --green:#52c078;
+}
+body.light-theme {
+  --navy:#F4F6F9; --navy2:#FFFFFF; --navy3:#EAEFF5;
+  --white:#0A1628; --gold:#B08D33; --gold2:rgba(176,141,51,.1); --gold3:rgba(176,141,51,.3);
+  --dim:rgba(10,22,40,.65); --low:rgba(10,22,40,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;transition:background 0.3s, color 0.3s}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--navy)}
+::-webkit-scrollbar-thumb{background:var(--gold)}
+
+/* === NAVIGATION === */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;background:rgba(10,22,40,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--gold3)}
+body.light-theme nav{background:rgba(244,246,249,.95)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.12em;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-controls{display:flex;align-items:center;gap:1rem}
+.ctrl-btn{background:var(--navy3);border:1px solid var(--gold3);color:var(--white);padding:0.4rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.65rem;cursor:pointer;border-radius:4px;transition:0.3s;outline:none;}
+.ctrl-btn:hover{border-color:var(--gold);background:var(--gold2)}
+select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('data:image/svg+xml;utf8,<svg fill="%23C9A84C" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat:no-repeat; background-position-x:100%; background-position-y:5px; }
+
+/* === HERO === */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 1.5rem 4rem;position:relative}
+.hero-tag{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.hero-number{font-family:'Bebas Neue',sans-serif;font-size:clamp(4.5rem,15vw,13rem);line-height:0.9;color:var(--white);margin-bottom:1rem;}
+.hero-slogan{font-size:clamp(1rem,2.5vw,1.4rem);color:var(--gold);font-style:italic;max-width:800px;}
+.hero-scroll{position:absolute;bottom:2rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;animation:sa 2s infinite}
+.scroll-bar{width:1px;height:2rem;background:linear-gradient(var(--dim),transparent)}
+@keyframes sa{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(5px)}}
+
+/* === STRUCTURE GENERALE === */
+.sw{padding:5rem 2rem;max-width:1200px;margin:0 auto}
+.sl{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;display:flex;align-items:center;gap:.8rem}
+.sl::after{content:'';flex:1;max-width:60px;height:1px;background:var(--gold3)}
+.st{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.5rem);line-height:1;margin-bottom:2rem}
+
+/* === LIVE COUNTERS === */
+.live-section{background:var(--navy2);border-top:1px solid var(--gold3);border-bottom:1px solid var(--gold3)}
+.live-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));}
+.live-card{padding:2rem 1.5rem;border-right:1px solid var(--low);display:flex;flex-direction:column;gap:.4rem}
+@media(max-width:900px){ .live-card{border-right:none; border-bottom:1px solid var(--low);} }
+.live-label{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.live-value{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--gold);line-height:1}
+
+/* === PARADOXES === */
+.paradox-grid {display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem;}
+.p-box {background:var(--navy3);border:1px solid var(--low);padding:2.5rem 1.5rem;border-radius:6px;text-align:center;transition:0.3s;}
+.p-box:hover {border-color:var(--gold);transform:translateY(-5px);}
+.p-top {font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--white);line-height:1;}
+.p-vs {font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--red);margin:1rem 0;}
+.p-bot {font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--gold);line-height:1;}
+
+/* === ODD DASHBOARD (DYNAMIQUE) === */
+.progress-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:1.5rem;margin-top:2.5rem}
+.progress-item{padding:1.5rem;border:1px solid var(--low);border-radius:4px;background:var(--navy3); transition:0.3s;}
+.pr-label{font-size:.8rem;color:var(--white);margin-bottom:.8rem;font-weight:400}
+.pr-bar-wrap{background:var(--low);height:4px;margin-bottom:.5rem;margin-top:.5rem; border-radius:2px; overflow:hidden;}
+.pr-bar{height:100%;transition:width 1.2s cubic-bezier(0.4, 0, 0.2, 1);}
+.pr-values{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.pr-current{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold)}
+.dyn-btn {background:var(--gold); color:var(--navy); border:none; padding:0.8rem 1.5rem; font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:bold; cursor:pointer; border-radius:4px; transition:0.3s;}
+.dyn-btn:hover {background:var(--white);}
+
+/* === CHARTS, TABS & MAP === */
+.tabs-header{display:flex;gap:0;margin-bottom:3rem;border-bottom:1px solid var(--low);overflow-x:auto}
+.tab-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;padding:.75rem 1.4rem;color:var(--dim);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(400px, 1fr));gap:1.5rem}
+.chart-box{background:var(--navy2);border:1px solid var(--low);padding:1.5rem;border-radius:6px;width:100%;overflow:hidden;}
+.chart-box canvas {max-width:100%;}
+#map-container {width:100%;height:450px;background:var(--navy2);border:1px solid var(--low);border-radius:8px 8px 0 0;}
+.map-legend {background:var(--navy3);padding:1rem 2rem;border:1px solid var(--low);border-top:none;border-radius:0 0 8px 8px;display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;}
+.legend-item {display:flex;align-items:center;gap:0.5rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--dim);}
+.legend-dot {width:12px;height:12px;border-radius:50%;}
+
+/* === TIMELINE === */
+.timeline{position:relative;padding-left:2rem;max-width:800px;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(var(--gold3),transparent)}
+.tl-item{position:relative;padding-left:2rem;padding-bottom:2.5rem}
+.tl-dot{position:absolute;left:-2rem;top:.3rem;width:10px;height:10px;background:var(--gold);transform:translateX(calc(-50% + .5px));border-radius:50%;}
+.tl-year{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);line-height:1;margin-bottom:0.5rem;}
+.tl-event{font-size:1rem;color:var(--white);font-weight:bold;margin-bottom:0.3rem;}
+.tl-detail{font-size:0.85rem;color:var(--dim);line-height:1.6;}
+
+/* === IMPACT PERSONNEL (GAMIFIÉ) === */
+.impact-container {background:var(--navy3);border:1px solid var(--gold);padding:3rem 2rem;border-radius:8px;text-align:center;}
+.impact-slider {width:100%;max-width:500px;margin:2rem auto;-webkit-appearance:none;height:4px;background:var(--low);outline:none;border-radius:2px;}
+.impact-slider::-webkit-slider-thumb {-webkit-appearance:none;width:24px;height:24px;background:var(--gold);border-radius:50%;cursor:pointer;transition:transform 0.1s;}
+.impact-slider::-webkit-slider-thumb:hover {transform:scale(1.2);}
+.impact-res-grid {display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem;margin-top:2rem;}
+.i-box {padding:1.5rem;background:var(--navy2);border:1px solid var(--low);border-radius:6px;transition:0.3s;}
+.i-level {font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-top:1.5rem;padding:1rem;border-radius:4px;transition:0.3s;}
+
+/* === EXPLORATEUR PAYS === */
+.country-search{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
+.country-input{flex:1;min-width:250px;padding:1rem;background:var(--navy2);border:1px solid var(--low);color:var(--white);font-family:'DM Mono',monospace;border-radius:4px;}
+.country-input:focus{outline:none;border-color:var(--gold);}
+.country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;}
+.c-card{background:var(--navy3);padding:1.5rem;border-left:3px solid var(--gold);border-radius:4px;}
+.c-name{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;margin-bottom:0.5rem;}
+.c-stat{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--dim);border-bottom:1px solid var(--low);padding:0.3rem 0;}
+
+/* === PREDICTIONS === */
+.pred-controls{display:flex;gap:.8rem;margin-bottom:2rem;flex-wrap:wrap}
+.pred-btn{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;padding:.5rem 1.1rem;border:1px solid var(--gold3);background:none;color:var(--dim);cursor:pointer;border-radius:4px;transition:0.3s}
+.pred-btn.active{border-color:var(--gold);color:var(--gold);background:var(--gold2)}
+
+/* === LE QUIZ VIRAL & GAME OVER === */
+.quiz-container {background:var(--navy2);border:1px solid var(--gold3);padding:3rem 2rem;text-align:center;border-radius:8px;max-width:800px;margin:0 auto;}
+.quiz-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--gold);}
+.timer-bar {width:100%; height:4px; background:var(--low); margin-bottom:2rem; border-radius:2px; overflow:hidden;}
+.timer-fill {height:100%; background:var(--gold); width:100%;}
+.hearts {font-size:1.2rem; color:var(--red); letter-spacing:3px;}
+.quiz-q {font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem, 4vw, 2rem);margin-bottom:2rem;color:var(--white);}
+.quiz-options {display:grid;gap:1rem;margin-bottom:1.5rem;}
+.quiz-btn {background:var(--navy3);border:1px solid var(--low);color:var(--white);padding:1.2rem;cursor:pointer;transition:0.2s;border-radius:4px;font-family:'DM Sans',sans-serif; text-align:left;}
+.quiz-btn:hover {border-color:var(--gold);background:var(--gold2);}
+.quiz-btn.correct {background:rgba(82,192,120,0.15);border-color:var(--green);color:var(--green);}
+.quiz-btn.wrong {background:rgba(224,82,82,0.15);border-color:var(--red);color:var(--red);}
+.social-btn {display:inline-block;padding:0.8rem 1.5rem;margin:0.5rem;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--white);border-radius:4px;cursor:pointer;border:none;font-weight:bold;text-decoration:none;transition:0.2s;}
+.social-btn:hover{opacity:0.9; transform:scale(1.02);}
+.btn-x {background:#000;border:1px solid #333;}
+.btn-in {background:#0A66C2;border:1px solid #004182;}
+.btn-fb {background:#1877F2;border:1px solid #0c5ab6;}
+.quote-box {background:var(--navy);padding:1.5rem;border-left:3px solid var(--gold);font-style:italic;font-size:1.1rem;color:var(--dim);margin-bottom:1.5rem;border-radius:0 4px 4px 0;}
+
+/* === DOSSIERS & CONTACT === */
+.dossiers-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem;}
+.dossier-card{background:var(--navy3);border:1px solid var(--low);padding:2rem;display:flex;flex-direction:column;gap:.8rem;text-decoration:none;border-radius:6px;transition:0.3s;}
+.dossier-card:hover{border-color:var(--gold);transform:translateY(-5px);}
+.contact-box {background:linear-gradient(45deg, var(--navy2), var(--navy3));border:1px solid var(--gold);padding:3rem 2rem;text-align:center;border-radius:8px;}
+.newsletter-input {padding:1rem; width:100%; max-width:300px; background:var(--navy); border:1px solid var(--low); color:var(--white); border-radius:4px; margin-bottom:1rem; font-family:'DM Mono',monospace;}
+
+@media(max-width:768px){
+  nav{padding:1rem;flex-wrap:wrap;}
+  .nav-links{display:none}
+  .sw{padding:3rem 1.5rem}
+  .impact-res-grid {grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">673 <span data-i18n="nav-logo">MILLIONS</span></a>
+  <ul class="nav-links">
+    <li><a href="#paradoxes" data-i18n="nav-para">Paradoxes</a></li>
+    <li><a href="#dossiers" data-i18n="nav-dos">Dossiers</a></li>
+    <li><a href="#ou-en-sommes-nous" data-i18n="nav-odd">ODD 2</a></li>
+    <li><a href="#pays" data-i18n="nav-pays">Pays</a></li>
+    <li><a href="#impact" data-i18n="nav-imp">Impact</a></li>
+    <li><a href="#quiz-section" style="color:var(--gold);" data-i18n="nav-quiz">Quiz</a></li>
+  </ul>
+  <div class="nav-controls">
+    <select class="ctrl-btn lang-select" id="langSelect" onchange="switchLang(this.value)">
+      <option value="fr">FR</option>
+      <option value="en">EN</option>
+      <option value="es">ES</option>
+    </select>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="hero-tag" data-i18n="hero-tag">FAO SOFI 2025 · Banque Mondiale</p>
+  <h1 class="hero-number" id="heroCounter">0</h1>
+  <p class="hero-slogan" data-i18n="hero-slogan">La faim n'est pas une fatalité. C'est une organisation.</p>
+  <p style="color:var(--dim);margin-top:1rem;font-size:0.9rem" data-i18n="hero-sub">personnes souffrent de faim chronique aujourd'hui.</p>
+  <div class="hero-scroll"><div class="scroll-bar"></div><span style="font-family:'DM Mono';font-size:0.5rem;letter-spacing:0.2em;color:var(--dim)" data-i18n="scroll-text">EXPLORER</span></div>
+</div>
+
+<div class="live-section" id="live">
+  <div class="live-grid">
+    <div class="live-card">
+      <div class="live-label" data-i18n="l-w-t">Repas gaspillés aujourd'hui</div>
+      <div class="live-value red" id="wasteCounter">0</div>
+      <div class="live-desc" data-i18n="l-w-d">Basé sur 1,05 Md de tonnes/an</div>
+    </div>
+    <div class="live-card">
+      <div class="live-label" data-i18n="l-h-t">Personnes en faim chronique</div>
+      <div class="live-value">673 000 000</div>
+      <div class="live-desc" data-i18n="l-h-d">8,2% de la population mondiale</div>
+    </div>
+    <div class="live-card">
+      <div class="live-label" data-i18n="l-m-t">Budget militaire 2025 à ce jour</div>
+      <div class="live-value" id="militaryCounter">0</div>
+      <div class="live-desc" data-i18n="l-m-d">Record : 2 887 milliards $/an</div>
+    </div>
+    <div class="live-card">
+      <div class="live-label" data-i18n="l-c-t">Enfants en malnutrition</div>
+      <div class="live-value">38 000 000</div>
+      <div class="live-desc" data-i18n="l-c-d">Moins de 5 ans · Zones de crise</div>
+    </div>
+  </div>
+</div>
+
+<div class="sw" id="paradoxes">
+  <div class="sl" data-i18n="p-tag">Les faits qui dérangent</div>
+  <h2 class="st" data-i18n="p-title">LES PARADOXES DE L'ABONDANCE</h2>
+  <div class="paradox-grid">
+    <div class="p-box">
+      <div style="font-family:'DM Mono';font-size:0.6rem;color:var(--dim);margin-bottom:1rem;letter-spacing:0.1em" data-i18n="p1-tag">L'INDUSTRIE DU RÉGIME</div>
+      <div class="p-top">700 <span style="font-size:1.5rem" data-i18n="mds-text">MDS $</span></div>
+      <div class="p-vs">VS</div>
+      <div class="p-bot">93 <span style="font-size:1.5rem" data-i18n="mds-text">MDS $</span></div>
+      <div class="p-desc" data-i18n="p1-desc">Le monde dépense 7 fois plus pour maigrir que le coût total pour éradiquer la faim mondiale.</div>
+    </div>
+    <div class="p-box">
+      <div style="font-family:'DM Mono';font-size:0.6rem;color:var(--dim);margin-bottom:1rem;letter-spacing:0.1em" data-i18n="p2-tag">ANIMAUX DOMESTIQUES</div>
+      <div class="p-top">136 <span style="font-size:1.5rem" data-i18n="mds-text">MDS $</span></div>
+      <div class="p-vs">VS</div>
+      <div class="p-bot">93 <span style="font-size:1.5rem" data-i18n="mds-text">MDS $</span></div>
+      <div class="p-desc" data-i18n="p2-desc">Le marché de la nourriture pour animaux dépasse largement les fonds nécessaires pour nourrir l'humanité.</div>
+    </div>
+    <div class="p-box">
+      <div style="font-family:'DM Mono';font-size:0.6rem;color:var(--dim);margin-bottom:1rem;letter-spacing:0.1em" data-i18n="p3-tag">TOURISME SPATIAL</div>
+      <div class="p-top">45 <span style="font-size:1.5rem" data-i18n="mds-text">MDS $</span></div>
+      <div class="p-vs">VS</div>
+      <div class="p-bot">93 <span style="font-size:1.5rem" data-i18n="mds-text">MDS $</span></div>
+      <div class="p-desc" data-i18n="p3-desc">On investit massivement pour quitter la Terre, pendant que ceux qui y restent peinent à se nourrir.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sw" id="dossiers" style="background:var(--navy2); border-top:1px solid var(--gold3); border-bottom:1px solid var(--gold3);">
+  <div class="sl" data-i18n="d-tag">Investigations Hebdomadaires</div>
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:2rem;">
+    <h2 class="st" style="margin-bottom:0;" data-i18n="d-title">DOSSIERS D'ANALYSE</h2>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
+      <a href="https://www.facebook.com/profile.php?id=61589556124930" target="_blank" class="social-btn btn-fb" style="margin:0;" data-i18n="btn-fb-follow">Rejoindre sur Facebook</a>
+      <a href="https://www.linkedin.com/company/673-millions/" target="_blank" class="social-btn btn-in" style="margin:0;" data-i18n="btn-in-follow">Suivre sur LinkedIn</a>
+    </div>
+  </div>
+  <div class="dossiers-grid">
+    <div class="dossier-card">
+      <div class="d-tag" data-i18n="d1-tag">À LA UNE · SEMAINE 42</div>
+      <div class="d-title" data-i18n="d1-title">La Spéculation Boursière</div>
+      <div class="d-excerpt" style="color:var(--dim);" data-i18n="d1-desc">Comment les marchés financiers de Chicago et Londres fixent le prix du blé en Afrique. Le rôle mortifère des hedge funds.</div>
+    </div>
+    <div class="dossier-card">
+      <div class="d-tag" data-i18n="d2-tag">ARCHIVE · SEMAINE 41</div>
+      <div class="d-title" data-i18n="d2-title">Le Piège de l'Importation</div>
+      <div class="d-excerpt" style="color:var(--dim);" data-i18n="d2-desc">L'Afrique possède 60% des terres arables non cultivées mondiales, mais importe 50 milliards de $ de nourriture par an. Pourquoi ?</div>
+    </div>
+    <div class="dossier-card">
+      <div class="d-tag" data-i18n="d3-tag">ARCHIVE · SEMAINE 40</div>
+      <div class="d-title" data-i18n="d3-title">La Faim a un Genre</div>
+      <div class="d-excerpt" style="color:var(--dim);" data-i18n="d3-desc">150 millions de femmes de plus que d'hommes souffrent de la faim. Les mécanismes structurels d'une crise genrée.</div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-section" id="ou-en-sommes-nous">
+  <div class="sw" style="padding-top:5rem; padding-bottom:5rem;">
+    <div class="sl" data-i18n="odd-tag">Tableau de bord ODD 2</div>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+      <h2 class="st" style="margin-bottom:0;" data-i18n="odd-title">OÙ EN SOMMES-NOUS ?</h2>
+      <button class="dyn-btn" onclick="project2030()" id="oddProjBtn" data-i18n="odd-btn">PROJETER EN 2030 (STATU QUO)</button>
+    </div>
+    
+    <div class="quote-box" style="margin-top:2rem; margin-bottom:2rem; max-width:800px; border-left-color:var(--green);">
+      <strong data-i18n="odd-def-bold">Définition :</strong> <span data-i18n="odd-def">L'ODD 2 (Objectif de Développement Durable n°2) a été adopté par l'ONU en 2015. Sa mission absolue : <em>« Éliminer la faim, assurer la sécurité alimentaire, améliorer la nutrition et promouvoir l'agriculture durable d'ici 2030. »</em></span>
+    </div>
+    
+    <div class="progress-grid">
+      <div class="progress-item"><div class="pr-label" data-i18n="odd-l1">2.1 — Faim chronique</div><div class="pr-bar-wrap"><div class="pr-bar bad" id="bar1" style="width:55%"></div></div><div class="pr-values"><div class="pr-current" id="val1" data-i18n="odd-v1">673M affamés</div><div class="pr-status off-track" id="stat1" data-i18n="stat-fail">HORS CIBLE</div></div></div>
+      <div class="progress-item"><div class="pr-label" data-i18n="odd-l2">2.2 — Malnutrition infantile</div><div class="pr-bar-wrap"><div class="pr-bar warn" id="bar2" style="width:40%"></div></div><div class="pr-values"><div class="pr-current" id="val2" data-i18n="odd-v2">38M enfants</div><div class="pr-status at-risk" id="stat2" data-i18n="stat-risk">À RISQUE</div></div></div>
+      <div class="progress-item"><div class="pr-label" data-i18n="odd-l3">2.3 — Productivité agricole</div><div class="pr-bar-wrap"><div class="pr-bar warn" id="bar3" style="width:35%"></div></div><div class="pr-values"><div class="pr-current" id="val3" data-i18n="odd-v3">+18% depuis 2015</div><div class="pr-status off-track" id="stat3" data-i18n="stat-slow">LENT</div></div></div>
+      <div class="progress-item"><div class="pr-label" data-i18n="odd-l4">2.a — Investissements</div><div class="pr-bar-wrap"><div class="pr-bar bad" id="bar4" style="width:25%"></div></div><div class="pr-values"><div class="pr-current" id="val4" data-i18n="odd-v4">4% PIB moyen</div><div class="pr-status off-track" id="stat4" data-i18n="stat-fail">HORS CIBLE</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sw" id="donnees">
+  <div class="sl" data-i18n="c-tag">Analyse Macro</div>
+  <h2 class="st" data-i18n="c-title">ÉVOLUTION MONDIALE</h2>
+  <div class="tabs-header">
+    <button class="tab-btn active" onclick="switchTab('charts',this)" data-i18n="tab-c">Graphiques</button>
+    <button class="tab-btn" onclick="switchTab('timeline',this)" data-i18n="tab-t">Timeline Historique</button>
+  </div>
+  
+  <div class="tab-pane active" id="tab-charts">
+    <div class="chart-grid">
+      <div class="chart-box"><div style="font-family:'Bebas Neue';font-size:1.2rem;margin-bottom:1rem" data-i18n="chart-1-title">ÉVOLUTION FAIM MONDIALE (MILLIONS)</div><canvas id="c1"></canvas></div>
+      <div class="chart-box"><div style="font-family:'Bebas Neue';font-size:1.2rem;margin-bottom:1rem" data-i18n="chart-2-title">RÉPARTITION PAR RÉGION (M)</div><canvas id="c2"></canvas></div>
+    </div>
+  </div>
+  
+  <div class="tab-pane" id="tab-timeline">
+    <div class="timeline" id="fullTimeline"></div>
+  </div>
+</div>
+
+<div class="sw" id="map-section" style="background:var(--navy2); border-top:1px solid var(--gold3); border-bottom:1px solid var(--gold3);">
+  <div class="sl" data-i18n="map-tag">Cartographie de l'urgence</div>
+  <h2 class="st" data-i18n="map-title">LA CARTE DE LA FAIM</h2>
+  <p style="color:var(--dim);margin-bottom:2rem;" data-i18n="map-desc">Survolez un pays pour découvrir la proportion de sa population touchée par la sous-alimentation chronique.</p>
+  <div id="map-container"></div>
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#52c078;"></div> <span data-i18n="leg-1">Sécurisé (< 5%)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#C9A84C;"></div> <span data-i18n="leg-2">Vulnérable (5% - 15%)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e05252;"></div> <span data-i18n="leg-3">Urgence (> 15%)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.1);"></div> <span data-i18n="leg-4">Données en audit</span></div>
+  </div>
+</div>
+
+<div class="sw" id="pays">
+  <div class="sl" data-i18n="e-tag">Data par Pays</div>
+  <h2 class="st" data-i18n="e-title">EXPLORATEUR MONDIAL</h2>
+  <div style="color:var(--gold); font-family:'DM Mono'; font-size:0.8rem; margin-bottom:1rem;" data-i18n="e-sub">194 PAYS DANS LA BASE. TAPEZ UN NOM POUR EXPLORER.</div>
+  <div class="country-search">
+    <input type="text" class="country-input" id="cSearch" placeholder="Rechercher (ex: Mali, Russie, France...)" oninput="liveSearch()">
+  </div>
+  <div class="country-grid" id="cResults"></div>
+</div>
+
+<div class="sw" id="predictions" style="border-top:1px solid var(--gold3); background:var(--navy2);">
+  <div class="sl" data-i18n="pr-tag">Analyse prospective</div>
+  <h2 class="st" data-i18n="pr-title">PRÉDICTIONS 2030</h2>
+  <div class="pred-controls">
+    <button class="pred-btn active" onclick="updatePrediction('all', this)" data-i18n="pr-btn-all">Tous les scénarios</button>
+    <button class="pred-btn" onclick="updatePrediction('bau', this)" data-i18n="pr-btn-bau">Statu quo</button>
+    <button class="pred-btn" onclick="updatePrediction('mod', this)" data-i18n="pr-btn-mod">Modéré</button>
+    <button class="pred-btn" onclick="updatePrediction('odd', this)" data-i18n="pr-btn-odd">ODD 2</button>
+  </div>
+  <div class="chart-box" style="margin-bottom:2rem"><canvas id="chartPred" style="max-height:400px"></canvas></div>
+</div>
+
+<div class="sw" id="impact" style="border-top:1px solid var(--gold3);">
+  <div class="sl" data-i18n="i-tag">Mon Impact Quotidien</div>
+  <h2 class="st" data-i18n="i-title">CALCULEZ VOTRE GASPILLAGE</h2>
+  <p style="color:var(--dim); max-width:600px; margin:0 auto; text-align:center;" data-i18n="i-desc">Soyez honnête. Combien de repas ou équivalents jetez-vous par semaine ? (Restes, pain rassis...)</p>
+  
+  <div class="impact-container" style="margin-top:2rem;">
+    <div class="bebas" style="font-size:3.5rem; color:var(--white);"><span id="mealVal">3</span> <span style="font-size:1.5rem; color:var(--dim);" data-i18n="i-meals">REPAS / SEMAINE</span></div>
+    <input type="range" class="impact-slider" id="mealSlider" min="0" max="15" value="3" oninput="calcImpact()">
+    
+    <div class="i-level" id="impactLevel" style="background:rgba(201,168,76,0.1); color:var(--gold);">STATUT : CITOYEN PERFECTIBLE ⚖️</div>
+
+    <div class="impact-res-grid">
+      <div class="i-box">
+        <div style="font-size:2rem;">🗑️</div>
+        <div class="bebas" style="font-size:2rem; color:var(--gold); margin:0.5rem 0;" id="resKg">78 KG</div>
+        <div style="font-size:0.7rem; color:var(--dim); font-family:'DM Mono';" data-i18n="i-r1">Nourriture jetée / an</div>
+      </div>
+      <div class="i-box">
+        <div style="font-size:2rem;">💧</div>
+        <div class="bebas" style="font-size:2rem; color:var(--gold); margin:0.5rem 0;" id="resWater">156 000 L</div>
+        <div style="font-size:0.7rem; color:var(--dim); font-family:'DM Mono';" data-i18n="i-r2">Eau gaspillée / an</div>
+      </div>
+      <div class="i-box">
+        <div style="font-size:2rem;">🌍</div>
+        <div class="bebas" style="font-size:2rem; color:var(--gold); margin:0.5rem 0;" id="resCO2">195 KG</div>
+        <div style="font-size:0.7rem; color:var(--dim); font-family:'DM Mono';" data-i18n="i-r3">Émissions CO2 inutiles</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sw" id="quiz-section" style="background:var(--navy2); border-top:1px solid var(--gold3);">
+  <div class="sl" data-i18n="q-tag">Testez vos connaissances</div>
+  <h2 class="st" data-i18n="q-title">LE DÉFI DES DONNÉES</h2>
+  <p style="color:var(--dim); margin-bottom:2rem; max-width:600px;" data-i18n="q-desc">5 questions. 20 secondes par question. 3 erreurs et c'est Game Over. Arriverez-vous au bout pour débloquer votre rang ?</p>
+  
+  <div class="quiz-container" id="quizMain">
+    <div id="quizStartZone">
+      <button class="ctrl-btn" style="padding:1.5rem 3rem; font-size:1.2rem; background:var(--gold); color:var(--navy); font-weight:bold; border-radius:8px;" onclick="initGame()" data-i18n="q-start">COMMENCER LE DÉFI</button>
+    </div>
+
+    <div id="quizPlayZone" style="display:none;">
+      <div class="quiz-header">
+        <div id="quizScoreCount" data-i18n="q-count">QUESTION 1 / 5</div>
+        <div class="hearts" id="quizHearts">❤️❤️❤️</div>
+      </div>
+      <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+      <div class="quiz-q" id="quizQuestion">Chargement...</div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div id="quizFeedback" style="font-size:0.95rem; color:var(--dim); margin-top:1rem; min-height:40px; font-style:italic;"></div>
+    </div>
+    
+    <div id="quizEndZone" style="display:none;">
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);margin-bottom:0.5rem" id="finalRankDisplay"></h3>
+      <p style="color:var(--dim); font-size:1.2rem; margin-bottom:2rem;" id="finalScoreDisplay"></p>
+      
+      <div class="quote-box" id="randomQuoteDisplay"></div>
+      
+      <div id="socialShareZone" style="margin-top:2rem; padding-top:2rem; border-top:1px solid var(--low);">
+        <p style="color:var(--white); font-weight:bold; margin-bottom:1rem;" data-i18n="q-share-msg">Sensibilisez votre réseau avec ce chiffre :</p>
+        <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+          <button class="social-btn btn-fb" onclick="shareQuiz('fb')">Partager sur Facebook</button>
+          <button class="social-btn btn-in" onclick="shareQuiz('in')">Partager sur LinkedIn</button>
+          <button class="social-btn btn-x" onclick="shareQuiz('x')">Partager sur X</button>
+        </div>
+        <button class="ctrl-btn" style="margin-top:2rem;" onclick="initGame()" data-i18n="q-replay">REJOUER</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="border-top:1px solid var(--gold3)" id="contact">
+  <div class="sw">
+    <div class="contact-box reveal">
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;margin-bottom:1rem;color:var(--gold)" data-i18n="ct-title">CONTACT & ENGAGEMENT</h3>
+      <p style="color:var(--dim);margin-bottom:2rem;max-width:600px;margin-left:auto;margin-right:auto;" data-i18n="ct-desc">Vous souhaitez utiliser nos données pour un article, une recherche ou un partenariat ? L'information doit circuler.</p>
+      <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+        <a href="mailto:contact.673millions@gmail.com" class="social-btn" style="background:var(--navy); border:1px solid var(--gold); font-size:1rem;" data-i18n="ct-mail">📧 Nous écrire par Email</a>
+        <a href="https://www.linkedin.com/company/673-millions/" target="_blank" class="social-btn btn-in" style="font-size:1rem;">📱 Page LinkedIn</a>
+        <a href="https://www.facebook.com/profile.php?id=61589556124930" target="_blank" class="social-btn btn-fb" style="font-size:1rem;">👥 Page Facebook</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--navy3);border-top:1px solid var(--gold3);padding:2.5rem 3rem;text-align:center;">
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);margin-bottom:0.5rem">673 MILLIONS</div>
+  <div style="color:var(--dim);font-size:0.8rem">© 2026 · Projet Indépendant · Données : FAO, WFP, Banque Mondiale, SIPRI</div>
+</footer>
+
+<script>
+// === I18N DICTIONARY ===
+const dict = {
+  fr: {
+    "nav-logo": "MILLIONS", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "ODD 2", "nav-pays": "Pays", "nav-imp": "Impact", "nav-quiz": "Quiz",
+    "hero-tag": "FAO SOFI 2025 · Banque Mondiale", "hero-slogan": "La faim n'est pas une fatalité. C'est une organisation.", "hero-sub": "personnes souffrent de faim chronique aujourd'hui.", "scroll-text":"EXPLORER",
+    "l-w-t":"Repas gaspillés aujourd'hui", "l-w-d":"Basé sur 1,05 Md de tonnes/an", "l-h-t":"Personnes en faim chronique", "l-h-d":"8,2% de la population mondiale", "l-m-t":"Budget militaire à ce jour", "l-m-d":"Record : 2 887 milliards $/an", "l-c-t":"Enfants en malnutrition aiguë", "l-c-d":"Moins de 5 ans · Zones de crise", "mds-text": "MDS $",
+    "p-tag": "Les faits qui dérangent", "p-title": "LES PARADOXES DE L'ABONDANCE",
+    "p1-tag": "L'INDUSTRIE DU RÉGIME", "p1-desc": "Le monde dépense 7 fois plus pour maigrir que le coût total pour éradiquer la faim mondiale.",
+    "p2-tag": "ANIMAUX DOMESTIQUES", "p2-desc": "Le marché de la nourriture pour animaux dépasse largement les fonds nécessaires pour nourrir l'humanité.",
+    "p3-tag": "TOURISME SPATIAL", "p3-desc": "On investit massivement pour quitter la Terre, pendant que ceux qui y restent peinent à se nourrir.",
+    "d-tag": "Investigations Hebdomadaires", "d-title": "DOSSIERS D'ANALYSE", "btn-fb-follow": "Rejoindre sur Facebook", "btn-in-follow": "Suivre sur LinkedIn",
+    "d1-tag": "À LA UNE", "d1-title": "La Spéculation Boursière", "d1-desc": "Comment les marchés financiers fixent le prix du blé. Le rôle mortifère des hedge funds.",
+    "d2-tag": "ARCHIVE", "d2-title": "Le Piège de l'Importation", "d2-desc": "L'Afrique possède 60% des terres arables non cultivées mondiales, mais importe 50 Mds$. Pourquoi ?",
+    "d3-tag": "ARCHIVE", "d3-title": "La Faim a un Genre", "d3-desc": "150 millions de femmes de plus que d'hommes souffrent de la faim. Les mécanismes structurels.",
+    "odd-tag": "Tableau de bord ODD 2", "odd-title": "OÙ EN SOMMES-NOUS ?", "odd-btn": "PROJETER EN 2030 (STATU QUO)", "odd-desc": "Objectif des Nations Unies : Faim Zéro d'ici 2030. Voici l'état d'avancement actuel.",
+    "odd-def-bold": "Définition :", "odd-def": "L'ODD 2 (Objectif de Développement Durable n°2) a été adopté par l'ONU en 2015. Sa mission absolue : « Éliminer la faim, assurer la sécurité alimentaire, améliorer la nutrition et promouvoir l'agriculture durable d'ici 2030. »",
+    "odd-l1": "2.1 — Faim chronique", "odd-v1": "673M affamés", "stat-fail": "HORS CIBLE",
+    "odd-l2": "2.2 — Malnutrition infantile", "odd-v2": "38M enfants", "stat-risk": "À RISQUE",
+    "odd-l3": "2.3 — Productivité agricole", "odd-v3": "+18% depuis 2015", "stat-slow": "LENT",
+    "odd-l4": "2.a — Investissements", "odd-v4": "4% PIB moyen",
+    "c-tag": "Analyse Macro", "c-title": "ÉVOLUTION MONDIALE", "chart-1-title": "ÉVOLUTION FAIM MONDIALE (MILLIONS)", "chart-2-title": "RÉPARTITION PAR RÉGION (M)", "tab-c": "Graphiques", "tab-t": "Timeline Historique",
+    "map-tag": "Cartographie de l'urgence", "map-title": "LA CARTE DE LA FAIM", "map-desc": "Survolez un pays pour découvrir la proportion touchée par la sous-alimentation.",
+    "leg-1": "Sécurisé (< 5%)", "leg-2": "Vulnérable (5% - 15%)", "leg-3": "Urgence (> 15%)", "leg-4": "Données en audit",
+    "e-tag": "Data par Pays", "e-title": "EXPLORATEUR MONDIAL", "e-sub": "194 PAYS DANS LA BASE. TAPEZ UN NOM POUR EXPLORER.", "search-ph": "Rechercher (ex: Mali, Russie...)",
+    "i-tag": "Mon Impact Quotidien", "i-title": "CALCULEZ VOTRE GASPILLAGE", "i-desc": "Soyez honnête. Combien de repas ou équivalents jetez-vous par semaine ?", "i-meals": "REPAS / SEMAINE", "i-r1": "Nourriture jetée / an", "i-r2": "Eau gaspillée / an", "i-r3": "Émissions CO2 inutiles",
+    "pr-tag": "Analyse prospective", "pr-title": "PRÉDICTIONS 2030", "pr-btn-all": "Tous les scénarios", "pr-btn-bau": "Statu quo", "pr-btn-mod": "Modéré", "pr-btn-odd": "ODD 2",
+    "q-tag": "Testez vos connaissances", "q-title": "LE DÉFI DES DONNÉES", "q-desc": "5 questions. 20 secondes par question. 3 erreurs et c'est Game Over. Arriverez-vous au bout ?", "q-start": "COMMENCER LE DÉFI", "q-count": "QUESTION", "q-share-msg": "Sensibilisez votre réseau avec ce chiffre :", "q-replay": "REJOUER",
+    "ct-title": "CONTACT & ENGAGEMENT", "ct-desc": "Vous souhaitez utiliser nos données pour un article, une recherche ou un partenariat ? L'information doit circuler.", "ct-mail": "📧 Nous écrire par Email",
+    // Graph Labels
+    "chart-bau": "Statu quo (BAU)", "chart-mod": "Modéré", "chart-odd": "ODD 2"
+  },
+  en: {
+    "nav-logo": "MILLION", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "SDG 2", "nav-pays": "Countries", "nav-imp": "Impact", "nav-quiz": "Quiz",
+    "hero-tag": "FAO SOFI 2025 · World Bank", "hero-slogan": "Hunger is not a fatality. It's an organization.", "hero-sub": "people suffer from chronic hunger today.", "scroll-text":"EXPLORE",
+    "l-w-t":"Meals wasted today", "l-w-d":"Based on 1.05Bn tons/yr", "l-h-t":"Chronic hunger", "l-h-d":"8.2% of world pop", "l-m-t":"Military budget today", "l-m-d":"Record: $2,887 Bn/yr", "l-c-t":"Child malnutrition", "l-c-d":"Under 5 yrs · Crisis zones", "mds-text": "BN $",
+    "p-tag": "Disturbing Facts", "p-title": "THE PARADOXES OF ABUNDANCE",
+    "p1-tag": "THE DIET INDUSTRY", "p1-desc": "The world spends 7 times more to lose weight than the total cost to end global hunger.",
+    "p2-tag": "PET FOOD", "p2-desc": "The pet food market vastly exceeds the funds needed to feed humanity.",
+    "p3-tag": "SPACE TOURISM", "p3-desc": "We invest heavily to leave Earth, while those left behind struggle to eat.",
+    "d-tag": "Weekly Investigations", "d-title": "ANALYSIS DOSSIERS", "btn-fb-follow": "Join on Facebook", "btn-in-follow": "Follow on LinkedIn",
+    "d1-tag": "FEATURED", "d1-title": "Stock Speculation", "d1-desc": "How financial markets fix wheat prices. The deadly role of hedge funds.",
+    "d2-tag": "ARCHIVE", "d2-title": "The Import Trap", "d2-desc": "Africa has 60% of global uncultivated arable land, yet imports $50Bn of food.",
+    "d3-tag": "ARCHIVE", "d3-title": "Hunger is Gendered", "d3-desc": "150 million more women than men suffer from hunger. Structural mechanisms.",
+    "odd-tag": "SDG 2 Dashboard", "odd-title": "WHERE DO WE STAND?", "odd-btn": "PROJECT TO 2030 (BAU)", "odd-desc": "UN Goal: Zero Hunger by 2030. Current progress.",
+    "odd-def-bold": "Definition:", "odd-def": "SDG 2 (Sustainable Development Goal 2) was adopted by the UN in 2015. Its mission: « End hunger, achieve food security, improve nutrition and promote sustainable agriculture by 2030. »",
+    "odd-l1": "2.1 — Chronic hunger", "odd-v1": "673M hungry", "stat-fail": "OFF TRACK",
+    "odd-l2": "2.2 — Child malnutrition", "odd-v2": "38M children", "stat-risk": "AT RISK",
+    "odd-l3": "2.3 — Ag. productivity", "odd-v3": "+18% since 2015", "stat-slow": "SLOW",
+    "odd-l4": "2.a — Ag. investments", "odd-v4": "4% avg GDP",
+    "c-tag": "Macro Analysis", "c-title": "GLOBAL EVOLUTION", "chart-1-title": "GLOBAL HUNGER EVOLUTION (MILLIONS)", "chart-2-title": "DISTRIBUTION BY REGION (M)", "tab-c": "Charts", "tab-t": "Historical Timeline",
+    "map-tag": "Emergency Mapping", "map-title": "THE HUNGER MAP", "map-desc": "Hover over a country to discover the proportion of undernourished population.",
+    "leg-1": "Secure (< 5%)", "leg-2": "Vulnerable (5% - 15%)", "leg-3": "Emergency (> 15%)", "leg-4": "In Audit",
+    "e-tag": "Country Data", "e-title": "GLOBAL EXPLORER", "e-sub": "194 COUNTRIES. TYPE A NAME TO EXPLORE.", "search-ph": "Search (e.g. Russia, USA...)",
+    "i-tag": "My Daily Impact", "i-title": "CALCULATE YOUR WASTE", "i-desc": "Be honest. How many meals or equivalents do you throw away per week?", "i-meals": "MEALS / WEEK", "i-r1": "Food wasted / yr", "i-r2": "Water wasted / yr", "i-r3": "Useless CO2 emissions",
+    "pr-tag": "Prospective Analysis", "pr-title": "2030 PREDICTIONS", "pr-btn-all": "All Scenarios", "pr-btn-bau": "Status quo", "pr-btn-mod": "Moderate", "pr-btn-odd": "SDG 2",
+    "q-tag": "Test your knowledge", "q-title": "THE DATA CHALLENGE", "q-desc": "5 questions. 20 seconds each. 3 errors = Game Over. Will you unlock your rank?", "q-start": "START CHALLENGE", "q-count": "QUESTION", "q-share-msg": "Raise awareness with this fact:", "q-replay": "REPLAY",
+    "ct-title": "CONTACT & ENGAGEMENT", "ct-desc": "Want to use our data for an article or partnership? Information must flow.", "ct-mail": "📧 Email Us",
+    "chart-bau": "Status quo (BAU)", "chart-mod": "Moderate", "chart-odd": "SDG 2"
+  },
+  es: {
+    "nav-logo": "MILLONES", "nav-para": "Paradojas", "nav-dos": "Dossiers", "nav-odd": "ODS 2", "nav-pays": "Países", "nav-imp": "Impacto", "nav-quiz": "Quiz",
+    "hero-tag": "FAO SOFI 2025 · Banco Mundial", "hero-slogan": "El hambre no es fatalidad. Es organización.", "hero-sub": "personas sufren hambre crónica hoy.", "scroll-text":"EXPLORAR",
+    "l-w-t":"Comida tirada hoy", "l-w-d":"Basado en 1.050 M tons/año", "l-h-t":"Hambre crónica", "l-h-d":"8,2% pob. mundial", "l-m-t":"Presupuesto militar", "l-m-d":"Récord: 2.887 Mds $/año", "l-c-t":"Malnutrición infantil", "l-c-d":"Menores 5 años", "mds-text": "MDS $",
+    "p-tag": "Hechos Perturbadores", "p-title": "LAS PARADOJAS DE LA ABUNDANCIA",
+    "p1-tag": "INDUSTRIA DE LA DIETA", "p1-desc": "El mundo gasta 7 veces más en adelgazar que en erradicar el hambre.",
+    "p2-tag": "MASCOTAS", "p2-desc": "El mercado de mascotas supera los fondos para alimentar a la humanidad.",
+    "p3-tag": "TURISMO ESPACIAL", "p3-desc": "Invertimos masivamente para salir de la Tierra, mientras otros mueren de hambre.",
+    "d-tag": "Investigaciones", "d-title": "DOSSIERS DE ANÁLISIS", "btn-fb-follow": "Únete en Facebook", "btn-in-follow": "Sigue en LinkedIn",
+    "d1-tag": "DESTACADO", "d1-title": "Especulación Bursátil", "d1-desc": "Cómo los mercados fijan el precio del trigo. El rol de los fondos de cobertura.",
+    "d2-tag": "ARCHIVO", "d2-title": "Trampa de Importación", "d2-desc": "África tiene 60% de tierra no cultivada, pero importa 50 Mds$.",
+    "d3-tag": "ARCHIVO", "d3-title": "El Hambre tiene Género", "d3-desc": "150M más de mujeres que hombres sufren hambre. Mecanismos estructurales.",
+    "odd-tag": "Tablero ODS 2", "odd-title": "¿DÓNDE ESTAMOS?", "odd-btn": "PROYECTAR A 2030 (BAU)", "odd-desc": "Objetivo ONU: Hambre Cero para 2030. Progreso actual.",
+    "odd-def-bold": "Definición:", "odd-def": "El ODS 2 (Objetivo de Desarrollo Sostenible) fue adoptado por la ONU. Misión: « Poner fin al hambre, lograr la seguridad alimentaria y promover la agricultura sostenible para 2030. »",
+    "odd-l1": "2.1 — Hambre crónica", "odd-v1": "673M hambrientos", "stat-fail": "DESVIADO",
+    "odd-l2": "2.2 — Malnutrición infantil", "odd-v2": "38M niños", "stat-risk": "EN RIESGO",
+    "odd-l3": "2.3 — Productividad agrícola", "odd-v3": "+18% desde 2015", "stat-slow": "LENTO",
+    "odd-l4": "2.a — Inversiones agrícolas", "odd-v4": "4% PIB prom.",
+    "c-tag": "Análisis Macro", "c-title": "EVOLUCIÓN MUNDIAL", "chart-1-title": "EVOLUCIÓN HAMBRE MUNDIAL (MILLONES)", "chart-2-title": "DISTRIBUCIÓN POR REGIÓN (M)", "tab-c": "Gráficos", "tab-t": "Timeline Histórico",
+    "map-tag": "Mapeo de Emergencia", "map-title": "EL MAPA DEL HAMBRE", "map-desc": "Pase el ratón por un país para ver la proporción de subalimentación.",
+    "leg-1": "Seguro (< 5%)", "leg-2": "Vulnerable (5% - 15%)", "leg-3": "Emergencia (> 15%)", "leg-4": "En Auditoría",
+    "e-tag": "Datos por País", "e-title": "EXPLORADOR MUNDIAL", "e-sub": "194 PAÍSES. ESCRIBA UN NOMBRE.", "search-ph": "Buscar (ej. Rusia, Francia...)",
+    "i-tag": "Mi Impacto Diario", "i-title": "CALCULE SU DESPERDICIO", "i-desc": "¿Cuántas comidas tira por semana?", "i-meals": "COMIDAS / SEMANA", "i-r1": "Comida tirada / año", "i-r2": "Agua perdida / año", "i-r3": "Emisiones CO2 inútiles",
+    "pr-tag": "Análisis prospectivo", "pr-title": "PREDICCIONES 2030", "pr-btn-all": "Todos", "pr-btn-bau": "Status quo", "pr-btn-mod": "Moderado", "pr-btn-odd": "ODS 2",
+    "q-tag": "Pruebe sus conocimientos", "q-title": "EL DESAFÍO DE DATOS", "q-desc": "5 preguntas. 20s por pregunta. 3 errores = Game Over. ¿Lograrás tu rango?", "q-start": "INICIAR DESAFÍO", "q-count": "PREGUNTA", "q-share-msg": "Despierte a su red con este dato:", "q-replay": "VOLVER A JUGAR",
+    "ct-title": "CONTACTO Y COMPROMISO", "ct-desc": "¿Desea usar nuestros datos para un artículo? La info debe fluir.", "ct-mail": "📧 Escríbanos por Email",
+    "chart-bau": "Status quo", "chart-mod": "Moderado", "chart-odd": "ODS 2"
+  }
+};
+let currentLang = 'fr';
+
+// --- INITIALISATION (COMPTEURS HERO ET LIVE) ---
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.getElementById('heroCounter');
+  const target = 673000000;
+  const duration = 2500;
+  let start = null;
+
+  function tick(now) {
+    if (!start) start = now;
+    const progress = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.floor(ease * target).toLocaleString('fr-FR');
+    if(progress < 1) requestAnimationFrame(tick);
+    else el.textContent = '673 000 000';
+  }
+  requestAnimationFrame(tick);
+  
+  if (localStorage.getItem('visited_673')) {
+    setTimeout(() => {
+      document.getElementById('welcomeToast').classList.add('show');
+      setTimeout(() => document.getElementById('welcomeToast').classList.remove('show'), 5000);
+    }, 2000);
+  } else { localStorage.setItem('visited_673', 'true'); }
+  
+  calcImpact();
+  buildTimeline();
+});
+
+function updateLiveCounters() {
+  const now = new Date();
+  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const secondsToday = (now - midnight) / 1000;
+  
+  const wCounter = document.getElementById('wasteCounter');
+  const mCounter = document.getElementById('militaryCounter');
+  
+  // 66590 repas par sec (basé sur 1.05Mds tonnes) et 91546 $ budget militaire par sec
+  if(wCounter) wCounter.textContent = Math.floor(secondsToday * 66590).toLocaleString('fr-FR');
+  if(mCounter) mCounter.textContent = Math.floor(secondsToday * 91546).toLocaleString('fr-FR') + ' $';
+}
+setInterval(updateLiveCounters, 1000);
+updateLiveCounters();
+
+// --- I18N SWITCH ---
+function switchLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if(dict[lang] && dict[lang][key]) el.innerHTML = dict[lang][key];
+    else if(dict['en'][key]) el.innerHTML = dict['en'][key];
+  });
+  document.getElementById('cSearch').placeholder = dict[lang]['search-ph'] || dict['fr']['search-ph'];
+  calcImpact(); // update translation inside JS
+  
+  if(predChart) {
+    predChart.data.datasets[1].label = dict[lang]["chart-bau"] || "Statu quo";
+    predChart.data.datasets[2].label = dict[lang]["chart-mod"] || "Modéré";
+    predChart.data.datasets[3].label = dict[lang]["chart-odd"] || "ODD 2";
+    predChart.update();
+  }
+  
+  if(document.getElementById('quizPlayZone').style.display === 'block') {
+    if (qIdx < quizData.length) {
+        document.getElementById("quizScoreCount").textContent = `${dict[currentLang]["q-count"]} ${qIdx+1} / 5`;
+        document.getElementById("quizQuestion").textContent = quizData[qIdx].q[currentLang] || quizData[qIdx].q.fr;
+    }
+  }
+}
+
+// --- TABS & THEME ---
+function toggleTheme() {
+  document.body.classList.toggle("light-theme");
+  document.getElementById("themeBtn").textContent = document.body.classList.contains("light-theme") ? "☀️" : "🌙";
+  Chart.defaults.color = document.body.classList.contains("light-theme") ? '#0A1628' : 'rgba(255,255,255,0.45)';
+  [c1Chart, c2Chart, predChart].forEach(c => {
+    if(c.options.scales && c.options.scales.x) { c.options.scales.x.ticks.color = Chart.defaults.color; c.options.scales.y.ticks.color = Chart.defaults.color; }
+    c.update();
+  });
+}
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-pane, .tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// --- TIMELINE BUILDER ---
+function buildTimeline() {
+  const tData = [
+    {y:"1945", t:"Création de la FAO", d:"Naissance de l'architecture mondiale pour la sécurité alimentaire après-guerre."},
+    {y:"1974", t:"1ère Conférence Mondiale", d:"Promesse d'éradiquer la faim en 10 ans. Un échec politique majeur."},
+    {y:"1984", t:"Famine en Éthiopie", d:"Choc médiatique mondial. L'aide humanitaire devient une industrie."},
+    {y:"2008", t:"Crise des subprimes", d:"La spéculation financière affame 100 millions de personnes supplémentaires."},
+    {y:"2015", t:"L'Engagement ODD 2", d:"L'ONU fixe 2030 comme date butoir pour la Faim Zéro."},
+    {y:"2022", t:"Guerre en Ukraine", d:"Le choc céréalier prouve la fragilité extrême du système d'importation."},
+    {y:"2025", t:"Le Mur des 673M", d:"Malgré les promesses, l'humanité stagne. L'ODD 2 est menacé."},
+    {y:"2030", t:"L'Heure de Vérité", d:"Le monde tiendra-t-il sa promesse ou acceptera-t-il cet échec civilisationnel ?"}
+  ];
+  const container = document.getElementById("fullTimeline");
+  container.innerHTML = '';
+  tData.forEach(i => container.innerHTML += `<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">${i.y}</div><div class="tl-event">${i.t}</div><div class="tl-detail">${i.d}</div></div>`);
+}
+
+// --- ODD 2 DYNAMIQUE ---
+let isProjected = false;
+function project2030() {
+  const btn = document.getElementById('oddProjBtn');
+  if(!isProjected) {
+    document.getElementById('bar1').style.width = '75%'; document.getElementById('val1').textContent = "512M (Échec)"; document.getElementById('bar1').style.background = "var(--red)";
+    document.getElementById('bar2').style.width = '60%'; document.getElementById('val2').textContent = "Stagnation";
+    document.getElementById('bar3').style.width = '45%'; document.getElementById('val3').textContent = "+22%";
+    document.getElementById('bar4').style.width = '15%'; document.getElementById('val4').textContent = "Chute des aides"; document.getElementById('bar4').style.background = "var(--red)";
+    btn.textContent = currentLang === 'en' ? "BACK TO 2025" : currentLang === 'es' ? "VOLVER A 2025" : "REVENIR EN 2025";
+    isProjected = true;
+  } else {
+    document.getElementById('bar1').style.width = '55%'; document.getElementById('val1').textContent = "673M affamés"; document.getElementById('bar1').style.background = "var(--red)";
+    document.getElementById('bar2').style.width = '40%'; document.getElementById('val2').textContent = "38M enfants";
+    document.getElementById('bar3').style.width = '35%'; document.getElementById('val3').textContent = "+18% depuis 2015";
+    document.getElementById('bar4').style.width = '25%'; document.getElementById('val4').textContent = "4% PIB moyen"; document.getElementById('bar4').style.background = "var(--red)";
+    btn.textContent = dict[currentLang]["odd-btn"] || "PROJETER EN 2030 (STATU QUO)";
+    isProjected = false;
+  }
+}
+
+// --- CARTE JSVECTOR MAP ---
+document.addEventListener("DOMContentLoaded", function() {
+  const hungerMapData = {"CD":41,"MG":39,"CF":45,"TD":37,"HT":47,"YE":45,"SO":48,"CI":11,"SN":9,"ML":21,"BF":23,"NE":42,"NG":12,"CM":10,"IN":16,"BD":11,"PK":20,"FR":2,"US":2};
+  new jsVectorMap({
+    selector: "#map-container", map: "world", backgroundColor: "transparent",
+    regionStyle: { initial: { fill: "#2a3b54", stroke: "rgba(255,255,255,0.1)" }, hover: { fill: "#C9A84C" } },
+    visualizeData: { scale: ["#52c078", "#C9A84C", "#e05252"], values: hungerMapData }
+  });
+});
+
+// --- PAYS (8 par défaut) ---
+const cDB = {
+  "cote d'ivoire": {n:"Côte d'Ivoire", h:"11,7%", c:"6,2%", stat:"Amélioration continue"},
+  "senegal": {n:"Sénégal", h:"9,8%", c:"5,1%", stat:"Investissement agricole fort"},
+  "rdc": {n:"R.D. Congo", h:"41,2%", c:"21,4%", stat:"Crise logistique majeure"},
+  "nigeria": {n:"Nigeria", h:"12,1%", c:"6,8%", stat:"Défis de sécurité"},
+  "kenya": {n:"Kenya", h:"26,8%", c:"11,2%", stat:"Vulnérabilité climatique"},
+  "madagascar": {n:"Madagascar", h:"39,7%", c:"24,1%", stat:"Insécurité sévère"},
+  "cameroun": {n:"Cameroun", h:"10,8%", c:"6,1%", stat:"Croissance stable"},
+  "mali": {n:"Mali", h:"21,6%", c:"12,2%", stat:"Urgence humanitaire"},
+  "russie": {n:"Russie", h:"< 2,5%", c:"< 2,5%", stat:"Impact compensé par la prod."},
+  "ukraine": {n:"Ukraine", h:"< 2,5%", c:"2%", stat:"Crise logistique (conflit)"},
+  "iran": {n:"Iran", h:"4,5%", c:"4%", stat:"Sécurité impactée par l'inflation"},
+  "chine": {n:"Chine", h:"< 2,5%", c:"1,2%", stat:"Objectif Faim Zéro atteint"},
+  "inde": {n:"Inde", h:"16,6%", c:"9,2%", stat:"Paradoxe: Exportateur mais faim locale"},
+  "usa": {n:"États-Unis", h:"< 2,5%", c:"0,9%", stat:"Fracture sociale"},
+  "france": {n:"France", h:"< 2,5%", c:"0,8%", stat:"Précarité étudiante croissante"}
+};
+
+function makeCard(k) { return `<div class="c-card"><div class="c-name">${cDB[k].n.toUpperCase()}</div><div class="c-stat"><span>Sous-alim.:</span> <span style="color:var(--gold)">${cDB[k].h}</span></div><div class="c-stat"><span>Malnutrition:</span> <span>${cDB[k].c}</span></div><div class="c-stat"><span>Bilan:</span> <span>${cDB[k].stat}</span></div></div>`; }
+
+function liveSearch() {
+  const q = document.getElementById('cSearch').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const res = document.getElementById('cResults');
+  if(q.length === 0) {
+    res.innerHTML = ["cote d'ivoire", "senegal", "rdc", "nigeria", "kenya", "madagascar", "cameroun", "mali"].map(k => makeCard(k)).join('');
+    return;
+  }
+  let found = Object.keys(cDB).filter(k => k.includes(q) || cDB[k].n.toLowerCase().includes(q));
+  if(found.length > 0) { res.innerHTML = found.map(k => makeCard(k)).join(''); } 
+  else { 
+      let auditText = currentLang === 'en' ? "In audit. Data not synchronized." : currentLang === 'es' ? "En auditoría. Datos no sincronizados." : "En cours d'audit. Données non synchronisées.";
+      res.innerHTML = `<div class="c-card" style="border-color:var(--dim)"><div class="c-name">${q.charAt(0).toUpperCase() + q.slice(1)}</div><div style="font-size:0.8rem;color:var(--dim);margin-top:1rem;">⏳ <strong>${auditText}</strong></div></div>`; 
+  }
+}
+document.getElementById('cResults').innerHTML = ["cote d'ivoire", "senegal", "rdc", "nigeria", "kenya", "madagascar", "cameroun", "mali"].map(k => makeCard(k)).join('');
+
+// --- IMPACT PERSONNEL GAMIFIÉ ---
+function calcImpact() {
+  const m = document.getElementById('mealSlider').value;
+  document.getElementById('mealVal').textContent = m;
+  const kgYear = m * 0.5 * 52;
+  const waterYear = kgYear * 1000;
+  const co2Year = kgYear * 2.5;
+  document.getElementById('resKg').textContent = kgYear.toFixed(0) + " KG";
+  document.getElementById('resWater').textContent = waterYear.toLocaleString('fr-FR') + " L";
+  document.getElementById('resCO2').textContent = co2Year.toFixed(0) + " KG";
+  
+  const lvl = document.getElementById('impactLevel');
+  if(m == 0) {
+      lvl.textContent = currentLang === 'en' ? "STATUS : GUARDIAN OF EARTH 🌍" : currentLang === 'es' ? "ESTADO : GUARDIÁN DE LA TIERRA 🌍" : "STATUT : GARDIEN DE LA TERRE 🌍";
+      lvl.style.color = "var(--green)"; lvl.style.background = "rgba(82,192,120,0.1)";
+  } else if(m <= 3) {
+      lvl.textContent = currentLang === 'en' ? "STATUS : CONSCIOUS CITIZEN ⚖️" : currentLang === 'es' ? "ESTADO : CIUDADANO CONSCIENTE ⚖️" : "STATUT : CITOYEN PERFECTIBLE ⚖️";
+      lvl.style.color = "var(--gold)"; lvl.style.background = "rgba(201,168,76,0.1)";
+  } else {
+      lvl.textContent = currentLang === 'en' ? "STATUS : CONTRIBUTOR TO SHORTAGE ⚠️" : currentLang === 'es' ? "ESTADO : CONTRIBUYENTE A LA ESCASEZ ⚠️" : "STATUT : CONTRIBUTEUR À LA PÉNURIE ⚠️";
+      lvl.style.color = "var(--red)"; lvl.style.background = "rgba(224,82,82,0.1)";
+  }
+}
+
+// --- LE JEU DU QUIZ (TIMER + VIES) ---
+const quizData = [
+  { q:{fr:"Quelle proportion des terres arables mondiales ne sert à nourrir personne ?", en:"What proportion of arable land feeds no one?", es:"¿Qué proporción de tierra cultivable no alimenta a nadie?"}, o:{fr:["5%", "28%", "50%"], en:["5%", "28%", "50%"], es:["5%", "28%", "50%"]}, a:1, e:{fr:"28%. Cette terre produit la nourriture que nous gaspillons.", en:"28%. It produces the food we waste.", es:"28%. Produce la comida que desperdiciamos."} },
+  { q:{fr:"Quel % du budget militaire mondial suffirait à éradiquer la faim ?", en:"What % of military budget could end hunger?", es:"¿Qué % del presupuesto militar acabaría con el hambre?"}, o:{fr:["3.2%", "15%", "45%"], en:["3.2%", "15%", "45%"], es:["3.2%", "15%", "45%"]}, a:0, e:{fr:"3,2% (soit 93 Mds $ sur 2887 Mds $).", en:"3.2% ($93B out of $2887B).", es:"3,2% ($93 Mds de $2887 Mds)."} },
+  { q:{fr:"Combien le monde dépense-t-il en régimes chaque année ?", en:"How much is spent on diets yearly?", es:"¿Cuánto se gasta en dietas al año?"}, o:{fr:["93 Mds $", "200 Mds $", "700 Mds $"], en:["$93B", "$200B", "$700B"], es:["$93 Mds", "$200 Mds", "$700 Mds"]}, a:2, e:{fr:"700 Mds $ pour maigrir, 93 Mds $ pour éradiquer la faim.", en:"$700B to lose weight, $93B to eradicate hunger.", es:"$700 Mds para adelgazar, $93 Mds para el hambre."} },
+  { q:{fr:"Laquelle de ces nations est classée 'Objectif Faim Zéro atteint' ?", en:"Which nation is classified as 'Zero Hunger reached'?", es:"¿Qué nación ha alcanzado 'Hambre Cero'?"}, o:{fr:["Inde", "Chine", "R.D. Congo"], en:["India", "China", "DR Congo"], es:["India", "China", "RD Congo"]}, a:1, e:{fr:"La Chine. L'Inde, paradoxalement, exporte mais a faim localement.", en:"China. India paradoxically exports but is hungry locally.", es:"China. India exporta pero pasa hambre localmente."} },
+  { q:{fr:"Combien de femmes de plus que d'hommes souffrent de la faim ?", en:"How many more women than men go hungry?", es:"¿Cuántas mujeres más que hombres pasan hambre?"}, o:{fr:["10 Millions", "50 Millions", "150 Millions"], en:["10 Million", "50 Million", "150 Million"], es:["10 Millones", "50 Millones", "150 Millones"]}, a:2, e:{fr:"150 Millions. Dans les crises, les femmes mangent souvent en dernier.", en:"150 Million. In crises, women often eat last.", es:"150 Millones. En crisis, las mujeres suelen comer últimas."} }
+];
+const citations = [
+  { fr:"« 93 milliards de dollars pour éradiquer la faim. 2887 milliards pour s'armer. Le monde a fait son choix. »", en:"« $93 billion to eradicate hunger. $2,887 billion to arm. The world has made its choice. »", es:"« 93.000 millones para erradicar el hambre. 2.887 miles de millones para armarse. El mundo ha elegido. »" },
+  { fr:"« Produire pour jeter, spéculer pour affamer : voici le vrai visage du marché céréalier moderne. »", en:"« Produce to throw away, speculate to starve: this is the true face of the modern grain market. »", es:"« Producir para tirar, especular para matar de hambre: este es el verdadero rostro del mercado moderno. »" },
+  { fr:"« L'Afrique possède 60% des terres arables mondiales non cultivées, mais importe sa nourriture. Le paradoxe est total. »", en:"« Africa has 60% of the world's uncultivated arable land, yet imports its food. The paradox is absolute. »", es:"« África posee el 60% de la tierra cultivable no explotada del mundo, pero importa su comida. La paradoja es total. »" }
+];
+
+let qIdx = 0, score = 0, errors = 0;
+const MAX_ERRORS = 3;
+const TIME_LIMIT = 20; 
+let timerInterval;
+let selectedQuoteObj = null;
+
+function initGame() {
+  qIdx = 0; score = 0; errors = 0;
+  document.getElementById('quizStartZone').style.display = 'none';
+  document.getElementById('quizEndZone').style.display = 'none';
+  document.getElementById('quizPlayZone').style.display = 'block';
+  updateHearts();
+  loadQuizQuestion();
+}
+
+function updateHearts() {
+  let heartsStr = "";
+  for(let i=0; i<MAX_ERRORS - errors; i++) heartsStr += "❤️";
+  for(let i=0; i<errors; i++) heartsStr += "🖤";
+  document.getElementById('quizHearts').textContent = heartsStr;
+}
+
+function loadQuizQuestion() {
+  if (errors >= MAX_ERRORS) { gameOver(false); return; }
+  if (qIdx >= quizData.length) { gameOver(true); return; }
+  
+  const q = quizData[qIdx];
+  const qStr = dict[currentLang] && dict[currentLang]["q-count"] ? dict[currentLang]["q-count"] : "QUESTION";
+  document.getElementById("quizScoreCount").textContent = `${qStr} ${qIdx+1} / 5`;
+  document.getElementById("quizQuestion").textContent = q.q[currentLang] || q.q.fr;
+  const optsDiv = document.getElementById("quizOptions"); optsDiv.innerHTML = "";
+  
+  const opts = q.o[currentLang] || q.o.fr;
+  opts.forEach((opt, i) => {
+    const btn = document.createElement("button"); btn.className = "quiz-btn"; btn.textContent = opt; 
+    btn.onclick = () => processAnswer(i, btn); optsDiv.appendChild(btn);
+  });
+  
+  document.getElementById("quizFeedback").textContent = ""; 
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  const fill = document.getElementById('timerFill');
+  fill.style.transition = 'none'; fill.style.width = '100%'; fill.style.background = 'var(--gold)';
+  
+  let timeLeft = TIME_LIMIT;
+  setTimeout(() => { fill.style.transition = `width ${TIME_LIMIT}s linear`; fill.style.width = '0%'; }, 50);
+  
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    if(timeLeft <= 0) { 
+      clearInterval(timerInterval); 
+      processAnswer(-1, null); 
+    }
+  }, 1000);
+}
+
+function processAnswer(ansIndex, btn) {
+  clearInterval(timerInterval);
+  const q = quizData[qIdx];
+  const btns = document.querySelectorAll("#quizOptions .quiz-btn");
+  btns.forEach(b => b.disabled = true);
+  
+  if(ansIndex === q.a) {
+    if(btn) btn.classList.add("correct");
+    score++;
+    document.getElementById("quizFeedback").textContent = "✓ " + (q.e[currentLang] || q.e.fr);
+    document.getElementById("quizFeedback").style.color = "var(--green)";
+  } else {
+    if(btn) btn.classList.add("wrong");
+    btns[q.a].classList.add("correct");
+    errors++;
+    updateHearts();
+    document.getElementById("quizFeedback").textContent = "✗ " + (q.e[currentLang] || q.e.fr);
+    document.getElementById("quizFeedback").style.color = "var(--red)";
+  }
+  
+  setTimeout(() => { qIdx++; loadQuizQuestion(); }, 3500);
+}
+
+function gameOver(success) {
+  document.getElementById('quizPlayZone').style.display = 'none';
+  document.getElementById('quizEndZone').style.display = 'block';
+  
+  const titleDisplay = document.getElementById('finalRankDisplay');
+  const scoreDisplay = document.getElementById('finalScoreDisplay');
+  const quoteDisplay = document.getElementById('randomQuoteDisplay');
+  
+  if(!success) {
+    titleDisplay.textContent = "GAME OVER";
+    titleDisplay.style.color = "var(--red)";
+    scoreDisplay.textContent = currentLang === 'en' ? `3 errors reached (Score: ${score}/5).` : currentLang === 'es' ? `Alcanzó 3 errores (Puntuación: ${score}/5).` : `Vous avez atteint 3 fautes (Score : ${score}/5).`;
+    quoteDisplay.textContent = "";
+  } else {
+    let rank = score === 5 ? "GARDIEN DES DONNÉES 🏆" : "ANALYSTE ODD 2 📊";
+    if(currentLang === 'en') rank = score === 5 ? "DATA GUARDIAN 🏆" : "SDG 2 ANALYST 📊";
+    if(currentLang === 'es') rank = score === 5 ? "GUARDIÁN DE DATOS 🏆" : "ANALISTA ODS 2 📊";
+    
+    titleDisplay.textContent = rank;
+    titleDisplay.style.color = "var(--gold)";
+    scoreDisplay.textContent = currentLang === 'en' ? `Congratulations, final score: ${score}/5.` : currentLang === 'es' ? `Felicidades, puntuación final: ${score}/5.` : `Félicitations, score final : ${score}/5.`;
+    
+    selectedQuoteObj = citations[Math.floor(Math.random() * citations.length)];
+    quoteDisplay.textContent = selectedQuoteObj[currentLang] || selectedQuoteObj.fr;
+  }
+}
+
+function shareQuiz(network) {
+  const url = encodeURIComponent(window.location.href);
+  const sq = selectedQuoteObj ? (selectedQuoteObj[currentLang] || selectedQuoteObj.fr) : "La faim n'est pas une pénurie. C'est une organisation.";
+  
+  let text = "";
+  if (currentLang === 'en') text = encodeURIComponent(`I scored ${score}/5 on 673 MILLIONS! 🌍 \n\n${sq}\n\nTest your knowledge: `);
+  else if (currentLang === 'es') text = encodeURIComponent(`¡Obtuve ${score}/5 en el desafío 673 MILLONES! 🌍 \n\n${sq}\n\nPrueba tus conocimientos: `);
+  else text = encodeURIComponent(`J'ai obtenu ${score}/5 au défi 673 MILLIONS ! 🌍 \n\n${sq}\n\nViens tester tes connaissances : `);
+
+  if(network === 'x') window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
+  else if(network === 'in') window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=600');
+  else if(network === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=600');
+}
+
+// --- CHARTS & PREDICTIONS INTERACTIVES ---
+Chart.defaults.color = 'rgba(255,255,255,0.45)'; Chart.defaults.font.family = "'DM Mono',monospace"; const gridConfig = {color: 'rgba(128,128,128,0.08)', drawBorder: false};
+const c1Chart = new Chart(document.getElementById('c1'),{
+  type:'line',
+  data:{
+    labels:['2000','2005','2010','2015','2020','2025','2030'],
+    datasets:[
+      {label:'%', data:[14.7,12.1,11.4,10.7,12.6,8.2, null], borderColor:'#C9A84C', tension:.4, backgroundColor:'rgba(201,168,76,.1)', fill:true},
+      {label:'Proj. BAU', data:[null,null,null,null,null,8.2, 7.5], borderColor:'#e05252', borderDash:[5,5], tension:.4} 
+    ]
+  },
+  options:{plugins:{legend:{display:false}}, scales:{x:{grid:gridConfig},y:{grid:gridConfig}}}
+});
+const c2Chart = new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:['Asie du Sud','Afrique Subsaharienne','Asie SE','Am. Latine','Autres'],datasets:[{data:[250,282,70,47,24], backgroundColor:['#e05252','#C9A84C','#52c078','#4b6584','rgba(255,255,255,0.2)'], borderWidth:0}]},options:{plugins:{legend:{display:false}}, cutout:'65%'}});
+
+let predChart = new Chart(document.getElementById('chartPred'), {
+  type: 'line',
+  data: {
+    labels: ['2015','2020','2025','2026','2027','2028','2029','2030'],
+    datasets: [
+      {label: 'Historique', data: [795, 828, 673, null, null, null, null, null], borderColor: 'gray', tension: 0.4},
+      {label: 'Statu quo', data: [null, null, 673, 650, 620, 585, 548, 512], borderColor: '#e05252', borderDash:[5,5], tension: 0.4},
+      {label: 'Modéré', data: [null, null, 673, 490, 450, 420, 400, 380], borderColor: '#C9A84C', borderDash:[5,5], tension: 0.4},
+      {label: 'ODD 2', data: [null, null, 673, 150, 120, 100, 95, 85], borderColor: '#52c078', borderDash:[5,5], tension: 0.4}
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio:false, scales: { x: {grid:gridConfig}, y: {grid:gridConfig, min:0, max:900} }, plugins: { legend: {display: true, position: 'bottom', labels:{color:'white', font:{family:"'DM Mono',monospace"}}} } }
+});
+
+function updatePrediction(mode, btnElement) {
+  document.querySelectorAll('.pred-btn').forEach(b => b.classList.remove('active'));
+  btnElement.classList.add('active');
+  predChart.data.datasets.forEach((dataset, index) => {
+    if(index === 0) dataset.hidden = false;
+    else if (mode === 'all') dataset.hidden = false;
+    else if (mode === 'bau' && index === 1) dataset.hidden = false;
+    else if (mode === 'mod' && index === 2) dataset.hidden = false;
+    else if (mode === 'odd' && index === 3) dataset.hidden = false;
+    else dataset.hidden = true;
+  });
+  predChart.update();
+}
+
+// INTERSECTION OBSERVERS
+const ro=new IntersectionObserver(es=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*65); ro.unobserve(e.target); } }); },{threshold:.08});
+document.querySelectorAll('.reveal').forEach(e=>ro.observe(e));
+const po=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.querySelectorAll('.pr-bar').forEach(b=>{ setTimeout(()=>b.style.width=b.dataset.width+'%',250); }); po.unobserve(e.target); } }); },{threshold:.15});
+document.querySelectorAll('.progress-item').forEach(e=>po.observe(e));
+</script>
+</body>
+</html>
