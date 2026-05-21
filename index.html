@@ -694,7 +694,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-// --- PAYS (8 par défaut) ---
+// --- PAYS (4 par défaut sur mobile) ---
 const cDB = {
   "cote d'ivoire": {n:"Côte d'Ivoire", h:"11,7%", c:"6,2%", stat:"Amélioration continue"},
   "senegal": {n:"Sénégal", h:"9,8%", c:"5,1%", stat:"Investissement agricole fort"},
@@ -719,7 +719,8 @@ function liveSearch() {
   const q = document.getElementById('cSearch').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   const res = document.getElementById('cResults');
   if(q.length === 0) {
-    res.innerHTML = ["cote d'ivoire", "senegal", "rdc", "nigeria", "kenya", "madagascar", "cameroun", "mali"].map(k => makeCard(k)).join('');
+    // Affiche seulement 4 pays quand la barre est vide
+    res.innerHTML = ["cote d'ivoire", "rdc", "madagascar", "mali"].map(k => makeCard(k)).join('');
     return;
   }
   let found = Object.keys(cDB).filter(k => k.includes(q) || cDB[k].n.toLowerCase().includes(q));
@@ -729,8 +730,8 @@ function liveSearch() {
       res.innerHTML = `<div class="c-card" style="border-color:var(--dim)"><div class="c-name">${q.charAt(0).toUpperCase() + q.slice(1)}</div><div style="font-size:0.8rem;color:var(--dim);margin-top:1rem;">⏳ <strong>${auditText}</strong></div></div>`; 
   }
 }
-document.getElementById('cResults').innerHTML = ["cote d'ivoire", "senegal", "rdc", "nigeria", "kenya", "madagascar", "cameroun", "mali"].map(k => makeCard(k)).join('');
-
+// Affiche les 4 pays au tout premier chargement du site
+document.getElementById('cResults').innerHTML = ["cote d'ivoire", "rdc", "madagascar", "mali"].map(k => makeCard(k)).join('');
 // --- IMPACT PERSONNEL GAMIFIÉ ---
 function calcImpact() {
   const m = document.getElementById('mealSlider').value;
