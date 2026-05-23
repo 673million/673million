@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>673 MILLIONS | La faim expliquée par les données.</title>
 <meta name="description" content="Plateforme indépendante sur l'ODD 2. Données certifiées FAO, Banque mondiale, WFP, SIPRI."/>
+
+<meta property="og:title" content="673 MILLIONS | Et si VOUS dirigiez le monde ?" />
+<meta property="og:description" content="Découvrez l'urgence de la faim mondiale. Explorez notre carte interactive, nos données en temps réel, et prenez les commandes de notre simulateur de budget mondial. L'argent existe." />
+<meta property="og:url" content="https://673millions.org/" />
+<meta property="og:site_name" content="Observatoire Mondial 673 Millions" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://673millions.org/image-partage.jpg" />
+<meta property="og:image:secure_url" content="https://673millions.org/image-partage.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/jpeg" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="673 MILLIONS | Le paradoxe de l'abondance" />
+<meta name="twitter:description" content="Éradiquer la faim coûte 93 Mds$. Le budget militaire est de 2887 Mds$. Faites le test vous-même sur notre simulateur." />
+<meta name="twitter:image" content="https://673millions.org/image-partage.jpg" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
@@ -22,8 +39,7 @@
   gtag('config', 'G-GVV6NSFQQ9');
 
   // =================================================================================
-  // 🛡️ COUP DE GÉNIE : PROTECTION DU WIDGET (IFRAME MODE)
-  // Si l'URL contient "?widget=true", on affiche UNIQUEMENT le compteur sécurisé.
+  // 🛡️ PROTECTION DU WIDGET (IFRAME MODE)
   // =================================================================================
   if(window.location.search.includes('widget=true')) {
     document.write(`
@@ -50,7 +66,7 @@
       <\/script>
     `);
     document.close();
-    window.stop(); // Stoppe le chargement du reste de la page pour le widget
+    window.stop(); 
   }
 </script>
 
@@ -115,12 +131,31 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 .ctrl-btn:hover{border-color:var(--gold);background:var(--gold2)}
 
 /* === COMPTEURS === */
-.live-section{background:var(--navy2);border-top:1px solid var(--gold3);border-bottom:1px solid var(--gold3)}
+.live-section{background:var(--navy2);border-top:1px solid var(--gold3);border-bottom:1px solid var(--gold3); position:relative;}
 .live-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));}
 .live-card{padding:2rem 1.5rem;border-right:1px solid var(--low);display:flex;flex-direction:column;gap:.4rem}
 @media(max-width:900px){ .live-card{border-right:none; border-bottom:1px solid var(--low);} }
 .live-label{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 .live-value{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--gold);line-height:1}
+
+/* === 📺 MODE CONFERENCE === */
+.exit-pres { display: none; }
+body.presentation-mode nav, 
+body.presentation-mode .hero, 
+body.presentation-mode .sw:not(#live), 
+body.presentation-mode .progress-section, 
+body.presentation-mode .receipt-wrapper, 
+body.presentation-mode footer { display: none !important; }
+body.presentation-mode { background: #000; overflow:hidden; }
+body.presentation-mode #live { display: flex !important; flex-direction: column; justify-content: center; min-height: 100vh; padding: 2rem; background: #000; border: none; max-width: 100%; margin: 0; }
+body.presentation-mode .live-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 100%; max-width: 1400px; margin: 0 auto; }
+body.presentation-mode .live-card { border: 1px solid var(--gold3); background: var(--navy3); border-radius: 12px; padding: 4rem 2rem; text-align: center; }
+body.presentation-mode .live-value { font-size: clamp(4rem, 8vw, 8rem); margin-bottom: 1rem; }
+body.presentation-mode .live-label { font-size: 1.5rem; color:var(--white); }
+body.presentation-mode .live-desc { display: none; }
+body.presentation-mode .exit-pres { display: block; position: absolute; top: 30px; right: 30px; z-index: 9999; background: var(--red); color: white; border: none; padding: 1rem 2rem; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; cursor: pointer; border-radius: 8px; transition:0.3s; }
+body.presentation-mode .exit-pres:hover { transform:scale(1.05); }
+@media(max-width:900px){ body.presentation-mode .live-grid { grid-template-columns: 1fr; } body.presentation-mode .live-card { padding: 2rem 1rem;} }
 
 /* === PARADOXES === */
 .paradox-grid {display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:1.5rem;}
@@ -129,6 +164,18 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 .p-top {font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--white);line-height:1;}
 .p-vs {font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--red);margin:1rem 0;}
 .p-bot {font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--gold);line-height:1;}
+
+/* === 🃏 SWIPER ANTI-FAKE NEWS === */
+.debunk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; perspective: 1000px; margin-top:2rem;}
+.flip-card { background-color: transparent; height: 280px; perspective: 1000px; cursor: pointer; }
+.flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+.flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; padding: 2rem; display:flex; flex-direction:column; justify-content:center; align-items:center; border: 1px solid var(--low); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.flip-card-front { background: var(--navy3); color: var(--white); }
+.flip-card-back { background: var(--red); color: white; transform: rotateY(180deg); border-color:var(--red); }
+.fc-icon { font-size:2.5rem; margin-bottom:1rem; }
+.fc-q { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; line-height:1.1; }
+.fc-a { font-size:0.9rem; line-height:1.5; font-weight:500;}
 
 /* === ODD DASHBOARD === */
 .progress-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem;margin-bottom:2.5rem;}
@@ -219,9 +266,10 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 .contact-box {background:linear-gradient(45deg, var(--navy2), var(--navy3));border:1px solid var(--gold);padding:3rem 1.5rem;text-align:center;border-radius:8px;}
 .newsletter-input {padding:1rem; width:100%; max-width:300px; background:var(--navy); border:1px solid var(--low); color:var(--white); border-radius:4px; margin-bottom:1rem; font-family:'DM Mono',monospace;}
 
-/* === WIDGET CACHÉ === */
+/* === WIDGET CACHÉ & OPEN DATA === */
 .widget-copy-box { background:var(--navy3); border:1px solid var(--low); border-radius:4px; padding:1.5rem; position:relative; margin-top:1.5rem; text-align:left; display:none; }
 .widget-copy-btn { position:absolute; top:10px; right:10px; background:var(--gold); color:var(--navy); border:none; padding:0.4rem 0.8rem; border-radius:4px; font-weight:bold; cursor:pointer; font-family:'DM Mono', monospace; font-size:0.7rem; transition:0.3s; }
+.data-box { background:rgba(82,192,120,0.1); border:1px dashed var(--green); padding:2rem; text-align:center; border-radius:8px; margin-top:2rem;}
 
 @media(max-width:768px){
   nav{padding:1rem; flex-wrap:wrap;}
@@ -242,6 +290,7 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
     <li><a href="#quiz-section" style="color:var(--gold);" data-i18n="nav-quiz">Jeu</a></li>
   </ul>
   <div class="nav-controls">
+    <button class="theme-btn" onclick="togglePresentation()" title="Mode Conférence" data-i18n="nav-pres">📺</button>
     <select class="ctrl-btn lang-select" id="langSelect" onchange="switchLang(this.value)">
       <option value="fr">FR</option>
       <option value="en">EN</option>
@@ -260,6 +309,7 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 </div>
 
 <div class="live-section" id="live">
+  <button class="exit-pres" onclick="togglePresentation()" data-i18n="exit-pres">QUITTER LE MODE CONFÉRENCE ✖</button>
   <div class="live-grid">
     <div class="live-card">
       <div class="live-label" data-i18n="l-w-t">Repas gaspillés aujourd'hui</div>
@@ -312,7 +362,54 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   </div>
 </div>
 
-<div class="sw reveal" id="choc-visuel" style="background:var(--navy2); border-top:1px solid var(--gold3);">
+<div class="sw reveal" id="debunk" style="background:var(--navy2); border-top:1px solid var(--gold3);">
+  <div class="sl" data-i18n="deb-tag">Démontage des mythes</div>
+  <h2 class="st" data-i18n="deb-title">LA VÉRITÉ DERRIÈRE LES CLICHÉS</h2>
+  <p style="color:var(--dim); max-width:800px; margin-bottom:2rem; font-size: 1rem;">Cliquez sur les cartes pour détruire les idées reçues qui justifient l'inaction politique.</p>
+
+  <div class="debunk-grid">
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="fc-icon">👥</div>
+          <div class="fc-q" data-i18n="deb-q1">MYTHE : Nous sommes trop nombreux sur Terre.</div>
+          <div style="font-size:0.75rem; color:var(--gold); margin-top:1rem; font-family:'DM Mono';">CLIQUEZ POUR REVELER</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="fc-a" data-i18n="deb-a1">FAUX. L'agriculture mondiale produit déjà de quoi nourrir 10 milliards d'humains. C'est un problème de répartition et de gaspillage.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="fc-icon">🌱</div>
+          <div class="fc-q" data-i18n="deb-q2">MYTHE : Il manque de terres arables.</div>
+          <div style="font-size:0.75rem; color:var(--gold); margin-top:1rem; font-family:'DM Mono';">CLIQUEZ POUR REVELER</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="fc-a" data-i18n="deb-a2">FAUX. 60% des terres arables non cultivées mondiales sont en Afrique, qui importe pourtant 50 Milliards de nourriture par an.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="fc-icon">🌤️</div>
+          <div class="fc-q" data-i18n="deb-q3">MYTHE : C'est la faute du climat.</div>
+          <div style="font-size:0.75rem; color:var(--gold); margin-top:1rem; font-family:'DM Mono';">CLIQUEZ POUR REVELER</div>
+        </div>
+        <div class="flip-card-back">
+          <div class="fc-a" data-i18n="deb-a3">FAUX. Si le climat pèse, la spéculation financière sur les céréales et les guerres causent 80% des crises alimentaires aiguës.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sw reveal" id="choc-visuel" style="border-top:1px solid var(--gold3);">
   <div class="sl" data-i18n="f-tag">Preuve par l'image</div>
   <h2 class="st" data-i18n="f-title">LA COURSE DES PRIORITÉS (2015-2025)</h2>
   <p style="color:var(--dim); max-width:800px; margin-bottom:2rem; font-size: 1rem;" data-i18n="f-desc">Découvrez en quelques secondes l'évolution vertigineuse de nos priorités mondiales. Pendant que le budget pour combattre la faim stagne, les dépenses militaires et le gaspillage explosent.</p>
@@ -327,7 +424,7 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   </div>
 </div>
 
-<div class="sw reveal" id="dossiers" style="border-top:1px solid var(--gold3); border-bottom:1px solid var(--gold3);">
+<div class="sw reveal" id="dossiers" style="border-top:1px solid var(--gold3); border-bottom:1px solid var(--gold3); background:var(--navy2);">
   <div class="sl" data-i18n="d-tag">Investigations Hebdomadaires</div>
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:2rem;">
     <h2 class="st" style="margin-bottom:0;" data-i18n="d-title">DOSSIERS D'ANALYSE</h2>
@@ -356,7 +453,7 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   </div>
 </div>
 
-<div class="sw reveal" id="ou-en-sommes-nous">
+<div class="progress-section sw reveal" id="ou-en-sommes-nous">
   <div class="sl" data-i18n="odd-tag">Tableau de bord ODD 2</div>
   <div class="quote-box" style="margin-bottom:3rem; max-width:800px; border-left-color:var(--green);">
     <strong data-i18n="odd-def-bold">Définition :</strong> <span data-i18n="odd-def">L'ODD 2 a été adopté par l'ONU en 2015. Sa mission absolue : <em>« Éliminer la faim, assurer la sécurité alimentaire, améliorer la nutrition et promouvoir l'agriculture durable d'ici 2030. »</em></span>
@@ -627,7 +724,19 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   </div>
 </div>
 
-<div class="sw reveal" id="widget-partenaire" style="background:var(--navy2); border-top:1px solid var(--gold3);">
+<div class="sw reveal" id="open-data" style="background:var(--navy2); border-top:1px solid var(--gold3);">
+  <div class="sl" data-i18n="od-tag">Open-Data</div>
+  <h2 class="st" data-i18n="od-title">ACCÈS API ET DONNÉES BRUTES</h2>
+  <p style="color:var(--dim); max-width:800px; margin-bottom:2rem;" data-i18n="od-desc">
+    Transparence totale. Téléchargez l'intégralité de notre base de données (JSON) pour vos recherches, algorithmes ou articles.
+  </p>
+  <div class="data-box">
+    <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--green); margin-bottom:1rem;">> status: 200 OK | ready to download</div>
+    <button class="ctrl-btn" style="background:var(--green); color:var(--navy); font-weight:bold; border-color:var(--green);" onclick="downloadData()" data-i18n="od-btn">TÉLÉCHARGER LE DATASET (.JSON)</button>
+  </div>
+</div>
+
+<div class="sw reveal" id="widget-partenaire" style="border-top:1px solid var(--gold3);">
   <div class="sl" data-i18n="w-tag">Diffusez l'alerte sur votre site</div>
   <h2 class="st" data-i18n="w-title">OUTIL POUR WEBMASTERS & BLOGS</h2>
   <p style="color:var(--dim); margin-bottom:1.5rem; max-width:800px; font-size:0.95rem;" data-i18n="w-desc">
@@ -646,7 +755,7 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   <p style="font-size:0.7rem; color:var(--dim); margin-top:1rem; font-style:italic;" data-i18n="w-warn">Code protégé via iframe. 100% autonome et sécurisé. Aucune charge sur votre serveur.</p>
 </div>
 
-<div style="border-top:1px solid var(--gold3);" class="reveal" id="contact">
+<div style="border-top:1px solid var(--gold3); background:var(--navy2);" class="reveal" id="contact">
   <div class="sw">
     <div class="contact-box">
       <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;margin-bottom:1rem;color:var(--gold)" data-i18n="ct-title">CONTACT & ENGAGEMENT</h3>
@@ -676,13 +785,19 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 // === LE DICTIONNAIRE MULTILINGUE COMPLET ===
 const dict = {
   fr: {
-    "nav-logo": "MILLIONS", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "ODD 2", "nav-pays": "Pays", "nav-imp": "Profil", "nav-quiz": "Jeu",
+    "nav-logo": "MILLIONS", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "ODD 2", "nav-pays": "Pays", "nav-imp": "Profil", "nav-quiz": "Jeu", "nav-pres": "📺",
     "hero-tag": "FAO SOFI 2025 · Banque Mondiale", "hero-slogan": "La faim n'est pas une fatalité. C'est une organisation.", "hero-sub": "personnes souffrent de faim chronique aujourd'hui.", "scroll-text":"EXPLORER",
-    "l-w-t":"Repas gaspillés aujourd'hui", "l-w-d":"Basé sur 1,05 Md de tonnes/an", "l-h-t":"Personnes en faim chronique", "l-h-d":"8,2% de la population mondiale", "l-m-t":"Dépenses militaires aujourd'hui", "l-m-d":"Record : 2 887 milliards $/an", "l-c-t":"Enfants en malnutrition aiguë", "l-c-d":"Moins de 5 ans · Zones de crise", "mds-text": "MDS $",
+    "l-w-t":"Repas gaspillés aujourd'hui", "l-w-d":"Basé sur 1,05 Md de tonnes/an", "l-h-t":"Personnes en faim chronique", "l-h-d":"8,2% de la population mondiale", "l-m-t":"Dépenses militaires aujourd'hui", "l-m-d":"Record : 2 887 milliards $/an", "l-c-t":"Enfants en malnutrition aiguë", "l-c-d":"Moins de 5 ans · Zones de crise", "mds-text": "MDS $", "exit-pres": "QUITTER LE MODE CONFÉRENCE ✖",
+    
     "p-tag": "Les faits qui dérangent", "p-title": "LES PARADOXES DE L'ABONDANCE",
     "p1-tag": "L'INDUSTRIE DU RÉGIME", "p1-desc": "Le monde dépense 7 fois plus pour maigrir que le coût total pour éradiquer la faim mondiale.",
     "p2-tag": "ANIMAUX DOMESTIQUES", "p2-desc": "Le marché de la nourriture pour animaux dépasse largement les fonds nécessaires pour nourrir l'humanité.",
     "p3-tag": "TOURISME SPATIAL", "p3-desc": "On investit massivement pour quitter la Terre, pendant que ceux qui y restent peinent à se nourrir.",
+    
+    "deb-tag": "Démontage des mythes", "deb-title": "LA VÉRITÉ DERRIÈRE LES CLICHÉS",
+    "deb-q1": "MYTHE : Nous sommes trop nombreux sur Terre.", "deb-a1": "FAUX. L'agriculture mondiale produit déjà de quoi nourrir 10 milliards d'humains. C'est un problème de répartition et de gaspillage.",
+    "deb-q2": "MYTHE : Il manque de terres arables.", "deb-a2": "FAUX. 60% des terres arables non cultivées mondiales sont en Afrique, qui importe pourtant sa nourriture.",
+    "deb-q3": "MYTHE : C'est la faute du climat.", "deb-a3": "FAUX. Si le climat pèse, la spéculation financière sur les céréales et les guerres causent 80% des crises alimentaires aiguës.",
     
     "f-tag": "Preuve par l'image", "f-title": "LA COURSE DES PRIORITÉS (2015-2025)", "f-desc": "Découvrez en quelques secondes l'évolution vertigineuse de nos priorités mondiales. Pendant que le budget pour combattre la faim stagne, les dépenses militaires et le gaspillage explosent.", "f-source": "Sources certifiées : SIPRI (Armements) • FAO (Gaspillage) • PAM / ONU",
     
@@ -705,7 +820,6 @@ const dict = {
     
     "e-tag": "Data par Pays", "e-title": "EXPLORATEUR MONDIAL", "e-sub": "BASE DE DONNÉES ENRICHIE (195 PAYS). TAPEZ UN NOM.", "search-ph": "Ex: Mali, Russie, Brésil, France, Inde...",
     
-    // SIMULATEUR
     "sim-tag": "Simulation Interactive", "sim-title": "ET SI VOUS DIRIGIEZ LE MONDE ?", "sim-desc": "Votre mission : Trouver les 93 Milliards $ nécessaires pour éradiquer la faim dans le monde. Glissez les curseurs pour réaffecter les budgets.",
     "sim-obj": "BUDGET FAIM ZÉRO :", "sim-out": "/ 93 MDS $", "sim-arm": "Armement mondial :", "sim-gasp": "Gaspillage alimentaire :", "sim-reg": "Industrie du Régime :", "sim-vic": "<strong>🎉 MISSION ACCOMPLIE !</strong><br>En réduisant ces budgets, vous venez de sauver 673 millions de vies. L'argent existe. Les priorités sont un choix.",
     
@@ -717,39 +831,48 @@ const dict = {
     
     "q-tag": "Jeu : Testez votre instinct", "q-title": "MYTHE OU RÉALITÉ ?", "q-desc": "Découvrez si vous connaissez vraiment le monde dans lequel on vit. C'est rapide, instructif, et vous pourriez être choqué. 3 erreurs et c'est Game Over !", "q-start": "JOUER MAINTENANT 🎮", "q-count": "QUESTION", "q-share-msg": "Partagez votre score et alertez vos amis :", "q-auto-txt": "Le texte se rédigera automatiquement dans votre application.", "q-replay": "REJOUER",
     
-    // WIDGET
+    "od-tag": "Open-Data", "od-title": "ACCÈS API ET DONNÉES BRUTES", "od-desc": "Transparence totale. Téléchargez l'intégralité de notre base de données (JSON) pour vos recherches, algorithmes ou articles.", "od-btn": "TÉLÉCHARGER LE DATASET (.JSON)",
+    
     "w-tag": "Diffusez l'alerte sur votre site", "w-title": "OUTIL POUR WEBMASTERS & BLOGS", "w-desc": "Vous gérez un site web, un blog ou le portail d'une ONG ? Copiez simplement le code ci-dessous et collez-le sur votre page. Il affichera notre compteur de gaspillage en temps réel de façon totalement sécurisée pour sensibiliser vos visiteurs.", "w-warn": "Code protégé via iframe. 100% autonome et sécurisé. Aucune charge sur votre serveur.",
 
     "ct-title": "CONTACT & ENGAGEMENT", "ct-desc": "Vous souhaitez utiliser nos données pour un article, une recherche ou un partenariat ? L'information doit circuler.", "ct-news": "S'INSCRIRE À LA NEWSLETTER", "ct-mail": "📧 Nous écrire par Email", "ct-x": "🐦 Page X (Twitter)", "ct-in": "📱 Page LinkedIn", "ct-fb": "👥 Page Facebook",
     "chart-bau": "Statu quo BAU (%)", "chart-mod": "Modéré", "chart-odd": "ODD 2",
-    "st-1": "GARDIEN DE LA TERRE 🌍", "st-2": "CONSOMMATEUR AVERTI 🧐", "st-3": "CITOYEN PERFECTIBLE ⚖️", "st-4": "GASPIILLEUR AMATEUR 😬", "st-5": "DANGER ÉCOLOGIQUE 🚨", "st-6": "MINISTRO DU GASPILLAGE 🗑️👑"
+    "st-1": "GARDIEN DE LA TERRE 🌍", "st-2": "CONSOMMATEUR AVERTI 🧐", "st-3": "CITOYEN PERFECTIBLE ⚖️", "st-4": "GASPIILLEUR AMATEUR 😬", "st-5": "DANGER ÉCOLOGIQUE 🚨", "st-6": "MINISTRE DU GASPILLAGE 🗑️👑"
   },
   en: {
-    "nav-logo": "MILLION", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "SDG 2", "nav-pays": "Countries", "nav-imp": "Profile", "nav-quiz": "Game",
+    "nav-logo": "MILLION", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "SDG 2", "nav-pays": "Countries", "nav-imp": "Profile", "nav-quiz": "Game", "nav-pres": "📺",
     "hero-tag": "FAO SOFI 2025 · World Bank", "hero-slogan": "Hunger is not a fatality. It's an organization.", "hero-sub": "people suffer from chronic hunger today.", "scroll-text":"EXPLORE",
-    "l-w-t":"Meals wasted today", "l-w-d":"Based on 1.05Bn tons/yr", "l-h-t":"Chronic hunger", "l-h-d":"8.2% of world pop", "l-m-t":"Military spending today", "l-m-d":"Record: $2,887 Bn/yr", "l-c-t":"Child malnutrition", "l-c-d":"Under 5 yrs · Crisis zones", "mds-text": "BN $",
+    "l-w-t":"Meals wasted today", "l-w-d":"Based on 1.05Bn tons/yr", "l-h-t":"Chronic hunger", "l-h-d":"8.2% of world pop", "l-m-t":"Military spending today", "l-m-d":"Record: $2,887 Bn/yr", "l-c-t":"Child malnutrition", "l-c-d":"Under 5 yrs · Crisis zones", "mds-text": "BN $", "exit-pres": "EXIT PRESENTATION MODE ✖",
+    
     "p-tag": "Disturbing Facts", "p-title": "THE PARADOXES OF ABUNDANCE",
     "p1-tag": "THE DIET INDUSTRY", "p1-desc": "The world spends 7 times more to lose weight than the total cost to end global hunger.",
     "p2-tag": "PET FOOD", "p2-desc": "The pet food market vastly exceeds the funds needed to feed humanity.",
     "p3-tag": "SPACE TOURISM", "p3-desc": "We invest heavily to leave Earth, while those left behind struggle to eat.",
     
+    "deb-tag": "Myth Debunking", "deb-title": "THE TRUTH BEHIND THE CLICHÉS",
+    "deb-q1": "MYTH: There are too many people on Earth.", "deb-a1": "FALSE. Global agriculture already produces enough to feed 10 billion humans. It's an issue of distribution and waste.",
+    "deb-q2": "MYTH: We lack arable land.", "deb-a2": "FALSE. 60% of the world's uncultivated arable land is in Africa, which ironically imports its food.",
+    "deb-q3": "MYTH: It's all because of climate change.", "deb-a3": "FALSE. While climate matters, financial speculation on grains and wars cause 80% of acute food crises.",
+
     "f-tag": "Proof by Image", "f-title": "THE RACE OF PRIORITIES (2015-2025)", "f-desc": "Discover in a few seconds the staggering evolution of global priorities. While the budget to fight hunger stagnates, military spending and waste skyrocket.", "f-source": "Certified sources: SIPRI (Arms) • FAO (Waste) • WFP / UN",
     
-    "rec-tag": "Action & Advocacy", "rec-title": "HUMANITY's RECEIPT", "rec-desc": "Generate and download our world's financial summary. Share this receipt on your networks.", "rec-sub": "GLOBAL DATA OBSERVATORY", "rec-facture": "ANNUAL BILL (EXPENSES)", "rec-i1": "MILITARY (SIPRI)", "rec-i2": "FOOD WASTE (FAO)", "rec-i3": "DIET INDUSTRY", "rec-tot": "SUBTOTAL SPENT", "rec-cost": "Cost to end hunger:", "rec-status": "PRIORITIES REJECTED", "rec-btn": "DOWNLOAD RECEIPT",
-
     "d-tag": "Weekly Investigations", "d-title": "ANALYSIS DOSSIERS", 
     "d1-tag": "FEATURED", "d1-title": "Stock Speculation", "d1-desc": "How financial markets fix wheat prices. The deadly role of hedge funds.",
     "d2-tag": "ARCHIVE", "d2-title": "The Import Trap", "d2-desc": "Africa has 60% of global uncultivated arable land, yet imports $50Bn of food.",
     "d3-tag": "ARCHIVE", "d3-title": "Hunger is Gendered", "d3-desc": "150 million more women than men suffer from hunger. Structural mechanisms.",
+    
     "odd-tag": "SDG 2 Dashboard", "odd-title": "WHERE DO WE STAND TODAY?", "odd-btn": "SEE 2030 PROJECTION (BAU)",
     "odd-def-bold": "Definition:", "odd-def": "SDG 2 was adopted by the UN in 2015. Its absolute mission: « End hunger, achieve food security, improve nutrition and promote sustainable agriculture by 2030. »",
     "odd-l1": "2.1 — Chronic hunger", "odd-v1": "673M hungry", "stat-fail": "OFF TRACK",
     "odd-l2": "2.2 — Child malnutrition", "odd-v2": "38M children", "stat-risk": "AT RISK",
     "odd-l3": "2.3 — Ag. productivity", "odd-v3": "+18% since 2015", "stat-slow": "SLOW",
     "odd-l4": "2.a — Ag. investments", "odd-v4": "4% avg GDP",
+    
     "c-tag": "Macro Analysis", "c-title": "GLOBAL EVOLUTION", "chart-1-title": "GLOBAL HUNGER EVOLUTION (MILLIONS)", "chart-1-desc": "Historical hunger vs. BAU projection.", "chart-2-title": "DISTRIBUTION BY REGION (M)", "chart-2-desc": "Where do the 673 million hungry people live?", "tab-c": "Charts", "tab-t": "Historical Timeline",
+    
     "map-tag": "Emergency Mapping", "map-title": "THE HUNGER MAP", "map-desc": "Hover over a country to discover the exact percentage of its undernourished population.", "map-click": "👆 Tap to explore the global map",
     "leg-1": "Secure (< 5%)", "leg-2": "Vulnerable (5% - 15%)", "leg-3": "Emergency (> 15%)", "leg-4": "In Audit",
+    
     "e-tag": "Country Data", "e-title": "GLOBAL EXPLORER", "e-sub": "ENRICHED DATABASE (195 COUNTRIES). TYPE A NAME.", "search-ph": "Ex: Mali, Russia, USA, Brazil, India...",
     
     "sim-tag": "Interactive Simulation", "sim-title": "WHAT IF YOU RULED THE WORLD?", "sim-desc": "Your mission: Find the $93 Billion needed to end world hunger. Drag the sliders to reallocate budgets.",
@@ -757,8 +880,13 @@ const dict = {
     
     "i-tag": "Your Consumer Profile", "i-title": "TEST YOUR IMPACT", "i-desc": "Be honest. How many meals or equivalents do you throw away per week?", "i-meals": "MEALS / WEEK", "i-r1": "Food wasted / yr", "i-r2": "Water wasted / yr", "i-r3": "CO2 emissions / yr",
     
+    "rec-tag": "Action & Advocacy", "rec-title": "HUMANITY's RECEIPT", "rec-desc": "Generate and download our world's financial summary. Share this receipt on your networks.", "rec-sub": "GLOBAL DATA OBSERVATORY", "rec-facture": "ANNUAL BILL (EXPENSES)", "rec-i1": "MILITARY (SIPRI)", "rec-i2": "FOOD WASTE (FAO)", "rec-i3": "DIET INDUSTRY", "rec-tot": "SUBTOTAL SPENT", "rec-cost": "Cost to end hunger:", "rec-status": "PRIORITIES REJECTED", "rec-btn": "DOWNLOAD RECEIPT",
+    
     "pr-tag": "Prospective Analysis", "pr-title": "2030 PREDICTIONS", "pr-btn-all": "All Scenarios", "pr-btn-bau": "Status quo", "pr-btn-mod": "Moderate", "pr-btn-odd": "SDG 2",
+    
     "q-tag": "Game: Test your instinct", "q-title": "MYTH OR REALITY?", "q-desc": "Find out if you really know the world we live in. Fast, informative, and you might be shocked. 3 errors = Game Over!", "q-start": "PLAY NOW 🎮", "q-count": "QUESTION", "q-share-msg": "Share your score and alert your friends:", "q-auto-txt": "The text will be written automatically in your app.", "q-replay": "REPLAY",
+
+    "od-tag": "Open-Data", "od-title": "API AND RAW DATA ACCESS", "od-desc": "Total transparency. Download our entire database (JSON) for your research, algorithms, or articles.", "od-btn": "DOWNLOAD DATASET (.JSON)",
     
     "w-tag": "Spread the alert on your site", "w-title": "TOOL FOR WEBMASTERS & BLOGS", "w-desc": "Do you manage a website, a blog, or an NGO portal? Simply copy the code below and paste it on your page. It will display our real-time waste counter securely.", "w-warn": "Code protected via iframe. 100% autonomous and secure. No database required on your server.",
 
@@ -767,40 +895,54 @@ const dict = {
     "st-1": "EARTH GUARDIAN 🌍", "st-2": "CONSCIOUS CONSUMER 🧐", "st-3": "IMPROVABLE CITIZEN ⚖️", "st-4": "AMATEUR WASTER 😬", "st-5": "ECOLOGICAL DANGER 🚨", "st-6": "WASTE MINISTER 🗑️👑"
   },
   es: {
-    "nav-logo": "MILLONES", "nav-para": "Paradojas", "nav-dos": "Dossiers", "nav-odd": "ODS 2", "nav-pays": "Países", "nav-imp": "Perfil", "nav-quiz": "Juego",
+    "nav-logo": "MILLONES", "nav-para": "Paradojas", "nav-dos": "Dossiers", "nav-odd": "ODS 2", "nav-pays": "Países", "nav-imp": "Perfil", "nav-quiz": "Juego", "nav-pres": "📺",
     "hero-tag": "FAO SOFI 2025 · Banco Mundial", "hero-slogan": "El hambre no es fatalidad. Es organización.", "hero-sub": "personas sufren hambre crónica hoy.", "scroll-text":"EXPLORAR",
-    "l-w-t":"Comida tirada hoy", "l-w-d":"Basado en 1.050 M tons/año", "l-h-t":"Hambre crónica", "l-h-d":"8,2% pob. mundial", "l-m-t":"Gasto militar hoy", "l-m-d":"Récord: 2.887 Mds $/año", "l-c-t":"Malnutrición infantil", "l-c-d":"Menores 5 años", "mds-text": "MDS $",
+    "l-w-t":"Comida tirada hoy", "l-w-d":"Basado en 1.050 M tons/año", "l-h-t":"Hambre crónica", "l-h-d":"8,2% pob. mundial", "l-m-t":"Gasto militar hoy", "l-m-d":"Récord: 2.887 Mds $/año", "l-c-t":"Malnutrición infantil", "l-c-d":"Menores 5 años", "mds-text": "MDS $", "exit-pres": "SALIR DEL MODO PRESENTACIÓN ✖",
+    
     "p-tag": "Hechos Perturbadores", "p-title": "LAS PARADOJAS DE LA ABUNDANCIA",
     "p1-tag": "INDUSTRIA DE LA DIETA", "p1-desc": "El mundo gasta 7 veces más en adelgazar que en erradicar el hambre.",
     "p2-tag": "MASCOTAS", "p2-desc": "El mercado de mascotas supera los fondos para alimentar a la humanidad.",
     "p3-tag": "TURISMO ESPACIAL", "p3-desc": "Invertimos masivamente para salir de la Tierra, mientras otros mueren de hambre.",
+
+    "deb-tag": "Desmontando Mitos", "deb-title": "LA VERDAD TRAS LOS CLICHÉS",
+    "deb-q1": "MITO: Somos demasiados en la Tierra.", "deb-a1": "FALSO. La agricultura mundial ya produce suficiente para alimentar a 10.000 millones de humanos. Es un problema de distribución.",
+    "deb-q2": "MITO: Falta tierra cultivable.", "deb-a2": "FALSO. El 60% de las tierras cultivables no utilizadas del mundo están en África, que paradójicamente importa su comida.",
+    "deb-q3": "MITO: Es culpa del clima.", "deb-a3": "FALSO. Aunque el clima influye, la especulación financiera con cereales y las guerras causan el 80% de las crisis agudas.",
     
     "f-tag": "Prueba visual", "f-title": "LA CARRERA DE PRIORIDADES (2015-2025)", "f-desc": "Descubra en segundos la vertiginosa evolución de las prioridades mundiales. Mientras el presupuesto contra el hambre se estanca, el gasto militar y el desperdicio se disparan.", "f-source": "Fuentes certificadas: SIPRI • FAO • PMA",
     
-    "rec-tag": "Acción y Defensa", "rec-title": "EL RECIBO DE LA HUMANIDAD", "rec-desc": "Genere y descargue el balance financiero de nuestro mundo. Comparta este recibo.", "rec-sub": "OBSERVATORIO MUNDIAL DE DATOS", "rec-facture": "FACTURA ANUAL (GASTOS)", "rec-i1": "ARMAMENTO (SIPRI)", "rec-i2": "DESPERDICIO (FAO)", "rec-i3": "IND. DE LA DIETA", "rec-tot": "SUBTOTAL GASTADO", "rec-cost": "Costo para erradicar el hambre:", "rec-status": "PRIORIDADES RECHAZADAS", "rec-btn": "DESCARGAR EL RECIBO",
-
     "d-tag": "Investigaciones", "d-title": "DOSSIERS DE ANÁLISIS",
     "d1-tag": "DESTACADO", "d1-title": "Especulación Bursátil", "d1-desc": "Cómo los mercados fijan el precio del trigo. El rol de los fondos de cobertura.",
     "d2-tag": "ARCHIVO", "d2-title": "Trampa de Importación", "d2-desc": "África tiene 60% de tierra no cultivada, pero importa 50 Mds$.",
     "d3-tag": "ARCHIVO", "d3-title": "El Hambre tiene Género", "d3-desc": "150M más de mujeres que hombres sufren hambre. Mecanismos estructurales.",
+    
     "odd-tag": "Tablero ODS 2", "odd-title": "¿DÓNDE ESTAMOS HOY?", "odd-btn": "VER PROYECCIÓN 2030 (BAU)",
     "odd-def-bold": "Definición:", "odd-def": "El ODS 2 fue adoptado por la ONU. Misión: « Poner fin al hambre, lograr la seguridad alimentaria y promover la agricultura sostenible para 2030. »",
     "odd-l1": "2.1 — Hambre crónica", "odd-v1": "673M hambrientos", "stat-fail": "DESVIADO",
     "odd-l2": "2.2 — Malnutrición infantil", "odd-v2": "38M niños", "stat-risk": "EN RIESGO",
     "odd-l3": "2.3 — Productividad agrícola", "odd-v3": "+18% desde 2015", "stat-slow": "LENTO",
     "odd-l4": "2.a — Inversiones agrícolas", "odd-v4": "4% PIB prom.",
+    
     "c-tag": "Análisis Macro", "c-title": "EVOLUCIÓN MUNDIAL", "chart-1-title": "EVOLUCIÓN HAMBRE MUNDIAL (MILLONES)", "chart-1-desc": "Historial del hambre vs Proyección BAU.", "chart-2-title": "DISTRIBUCIÓN POR REGIÓN (M)", "chart-2-desc": "¿Dónde viven los 673 millones de hambrientos?", "tab-c": "Gráficos", "tab-t": "Timeline Histórico",
+    
     "map-tag": "Mapeo de Emergencia", "map-title": "EL MAPA DEL HAMBRE", "map-desc": "Pase el ratón por un país para ver el porcentaje exacto de subalimentación.", "map-click": "👆 Tocar para explorar el mapa mundial",
     "leg-1": "Seguro (< 5%)", "leg-2": "Vulnerable (5% - 15%)", "leg-3": "Emergencia (> 15%)", "leg-4": "En Auditoría",
+    
     "e-tag": "Datos por País", "e-title": "EXPLORADOR MUNDIAL", "e-sub": "BASE ENRIQUECIDA (195 PAÍSES). ESCRIBA UN NOMBRE.", "search-ph": "Ej: Francia, Brasil, Mali, India...",
     
     "sim-tag": "Simulación Interactiva", "sim-title": "¿Y SI GOBERNARAS EL MUNDO?", "sim-desc": "Tu misión: Encontrar 93 Mds $ para erradicar el hambre. Desliza para reasignar presupuestos.",
     "sim-obj": "PRESUPUESTO HAMBRE CERO:", "sim-out": "/ 93 MDS $", "sim-arm": "Armamento global:", "sim-gasp": "Desperdicio:", "sim-reg": "Industria de Dieta:", "sim-vic": "<strong>🎉 ¡MISIÓN CUMPLIDA!</strong><br>Al reducir estos presupuestos, salvaste 673 millones de vidas. El dinero existe.",
     
     "i-tag": "Su Perfil de Consumidor", "i-title": "PRUEBE SU IMPACTO", "i-desc": "¿Cuántas comidas tira por semana?", "i-meals": "COMIDAS / SEMANA", "i-r1": "Comida tirada / año", "i-r2": "Agua perdida / año", "i-r3": "Emisiones CO2 / año",
+    
+    "rec-tag": "Acción y Defensa", "rec-title": "EL RECIBO DE LA HUMANIDAD", "rec-desc": "Genere y descargue el balance financiero de nuestro mundo. Comparta este recibo.", "rec-sub": "OBSERVATORIO MUNDIAL DE DATOS", "rec-facture": "FACTURA ANUAL (GASTOS)", "rec-i1": "ARMAMENTO (SIPRI)", "rec-i2": "DESPERDICIO (FAO)", "rec-i3": "IND. DE LA DIETA", "rec-tot": "SUBTOTAL GASTADO", "rec-cost": "Costo para erradicar el hambre:", "rec-status": "PRIORIDADES RECHAZADAS", "rec-btn": "DESCARGAR EL RECIBO",
+    
     "pr-tag": "Análisis prospectivo", "pr-title": "PREDICCIONES 2030", "pr-btn-all": "Todos", "pr-btn-bau": "Status quo", "pr-btn-mod": "Moderado", "pr-btn-odd": "ODS 2",
+    
     "q-tag": "Juego: Pruebe su instinto", "q-title": "¿MITO O REALIDAD?", "q-desc": "Descubra si conoce el mundo. Rápido, informativo. 3 errores = Game Over!", "q-start": "JUGAR AHORA 🎮", "q-count": "PREGUNTA", "q-share-msg": "Comparta su puntuación y alerte a sus amigos:", "q-auto-txt": "El texto se escribirá automáticamente en su aplicación.", "q-replay": "VOLVER A JUGAR",
     
+    "od-tag": "Open-Data", "od-title": "ACCESO A API Y DATOS CRUDOS", "od-desc": "Transparencia total. Descargue toda nuestra base de datos (JSON) para sus investigaciones, algoritmos o artículos.", "od-btn": "DESCARGAR DATASET (.JSON)",
+
     "w-tag": "Difunda la alerta", "w-title": "HERRAMIENTA PARA BLOGS", "w-desc": "¿Gestionas una web o blog? Copia el código abajo para mostrar nuestro contador en tiempo real de forma segura.", "w-warn": "Código protegido via iframe. 100% autónomo y seguro. Sin base de datos en su servidor.",
 
     "ct-title": "CONTACTO Y COMPROMISO", "ct-desc": "¿Desea usar nuestros datos para un artículo? La info debe fluir.", "ct-news": "SUSCRIBIRSE", "ct-mail": "📧 Escríbanos", "ct-x": "🐦 X (Twitter)", "ct-in": "📱 LinkedIn", "ct-fb": "👥 Facebook",
@@ -882,7 +1024,7 @@ function updateLiveCounters() {
 setInterval(updateLiveCounters, 1000);
 updateLiveCounters();
 
-// --- THEME & TABS ---
+// --- THEME & TABS & PRESENTATION MODE ---
 function toggleTheme() {
   document.body.classList.toggle("light-theme");
   document.getElementById("themeBtn").textContent = document.body.classList.contains("light-theme") ? "☀️" : "🌙";
@@ -897,6 +1039,12 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane, .tab-btn').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
+}
+function togglePresentation() {
+  document.body.classList.toggle("presentation-mode");
+  if(document.body.classList.contains("presentation-mode")) {
+      window.scrollTo(0,0);
+  }
 }
 
 // --- WIDGET COPIE AUTOMATIQUE ---
@@ -973,28 +1121,22 @@ function project2030() {
     document.getElementById('bar2').style.width = '40%'; document.getElementById('val2').textContent = "38M enfants";
     document.getElementById('bar3').style.width = '35%'; document.getElementById('val3').textContent = "+18% depuis 2015";
     document.getElementById('bar4').style.width = '25%'; document.getElementById('val4').textContent = "4% PIB moyen"; 
-    btn.textContent = dict[currentLang]["odd-btn"] || "VOIR LA PROJECTION 2030";
+    btn.textContent = dict[currentLang]["odd-btn"] || "VOIR LA PROJECTION 2030 (STATU QUO)";
     isProjected = false;
   }
 }
 
 // --- CARTE JSVECTOR MAP (COULEURS STRICTES ASSURÉES) ---
 const hungerMapData = {
-  // Amériques
   "US":2, "CA":2, "MX":6, "GT":8, "CU":4, "HN":15, "SV":13, "NI":10, "CR":12, "PA":4, "HT":47, "DO":6, "JM":6,
   "CO":8, "VE":22, "EC":7, "PE":9, "BR":4, "BO":14, "CL":5, "AR":3, "PY":6, "UY":3,
-  // Europe
   "FR":2, "DE":2, "IT":2, "ES":2, "GB":2, "PT":2, "BE":2, "NL":2, "CH":2, "SE":2, "NO":2, "FI":2, "DK":2, "IE":2, "PL":2, "CZ":2, "GR":3, "HU":2, "RO":3, "BG":3, "RS":3, "HR":2, "UA":4, "BY":3, "RU":2,
-  // Asie & Moyen-Orient
   "CN":2, "IN":16, "JP":2, "KR":2, "KP":41, "TW":2, "MN":10, "ID":7, "PH":8, "VN":9, "TH":6, "MY":5, "MM":7, "KH":8, "LA":13, "SG":2, "BD":11, "PK":20, "AF":30, "LK":12, "NP":9,
   "IR":5, "IQ":15, "SA":4, "YE":45, "OM":4, "AE":3, "SY":25, "JO":10, "LB":6, "IL":4, "TR":3, "KZ":4, "UZ":3,
-  // Afrique
   "EG":5, "LY":5, "DZ":4, "TN":4, "MA":4, "SD":35, "SS":46, "ER":20, "SO":48, "DJ":25, "ET":16, "KE":23, "UG":15, "TZ":14, "RW":28, "BI":34, "CD":41, "CG":35, "CF":45, "CM":10, "GA":25, "TD":37, "NE":42, "ML":21, "BF":23, "SN":9, "MR":10, "GM":10, "GW":12, "GN":17, "SL":26, "LR":38, "CI":11, "GH":10, "TG":12, "BJ":15, "NG":12, "AO":14, "ZM":29, "MW":18, "MZ":31, "ZW":38, "ZA":6, "NA":18, "BW":12, "LS":20, "MG":39,
-  // Océanie
   "AU":2, "NZ":2, "PG":12, "FJ":4
 };
 
-// La magie pour obliger JSVectorMap à faire des blocs de couleurs stricts (pas de dégradé)
 const mapCategoryData = {};
 for(let code in hungerMapData) {
   let val = hungerMapData[code];
@@ -1288,7 +1430,6 @@ function gameOver(success) {
   }
 }
 
-// PARTAGE SOCIAL AVEC TEXTE PRÉ-REMPLI MULTILINGUE
 function shareQuiz(network) {
   const url = encodeURIComponent("https://673millions.org");
   const sq = selectedQuoteObj[currentLang] || selectedQuoteObj.fr;
@@ -1303,7 +1444,7 @@ function shareQuiz(network) {
   else if(network === 'in') window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=600');
 }
 
-// --- CHARTS & PREDICTIONS INTERACTIVES (AVEC LÉGENDES) ---
+// --- CHARTS & PREDICTIONS INTERACTIVES ---
 Chart.defaults.color = 'rgba(255,255,255,0.7)'; Chart.defaults.font.family = "'DM Mono',monospace"; const gridConfig = {color: 'rgba(128,128,128,0.1)', drawBorder: false};
 const c1Chart = new Chart(document.getElementById('c1'),{
   type:'line',
@@ -1351,6 +1492,22 @@ function updatePrediction(mode, btnElement) {
     else dataset.hidden = true;
   });
   predChart.update();
+}
+
+// --- OPEN DATA DOWNLOAD ---
+function downloadData() {
+  const data = {
+    metadata: { source: "673millions.org", date: new Date().toISOString(), description: "Données mondiales sur la faim et le gaspillage" },
+    countryStats: cDB,
+    hungerMapRates: hungerMapData
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '673millions_dataset.json';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // INTERSECTION OBSERVERS
