@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVV6NSFQQ9"></script>
 <script>
@@ -129,6 +130,16 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 .impact-res-grid {display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem;margin-top:2rem;}
 .i-box {padding:1.5rem;background:var(--navy2);border:1px solid var(--low);border-radius:6px;transition:0.3s;}
 .i-level {font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-top:1.5rem;padding:1rem;border-radius:4px;transition:0.3s;}
+
+/* === TICKET DE CAISSE (GÉNÉRATEUR) === */
+.receipt-wrapper { display:flex; flex-direction:column; align-items:center; background:var(--navy2); border-top:1px solid var(--gold3); padding:4rem 2rem; }
+.receipt-paper { background:#ffffff; color:#1a1a1a; font-family:'DM Mono', monospace; font-size:0.85rem; width:100%; max-width:340px; padding:2.5rem 2rem; position:relative; box-shadow:0 15px 40px rgba(0,0,0,0.4); text-align:left; border-top: 6px dashed #cccccc; border-bottom: 6px dashed #cccccc; }
+.r-header { text-align:center; margin-bottom:1.5rem; border-bottom:2px dashed #bbbbbb; padding-bottom:1rem; }
+.r-title { font-family:'Bebas Neue', sans-serif; font-size:2.2rem; letter-spacing:1px; line-height:1; margin-bottom:0.3rem; color:#000; }
+.r-row { display:flex; justify-content:space-between; margin-bottom:0.7rem; font-weight:500; }
+.r-dots { flex-grow:1; border-bottom:1px dotted #999; margin:0 8px; position:relative; top:-6px; }
+.r-total { border-top:2px dashed #bbbbbb; border-bottom:2px dashed #bbbbbb; padding:1.2rem 0; margin:1.2rem 0; font-weight:700; font-size:1.1rem; display:flex; justify-content:space-between; }
+.r-status { text-align:center; font-weight:bold; font-size:0.9rem; padding:0.8rem; border:3px solid #d32f2f; color:#d32f2f; margin-top:1.5rem; transform:rotate(-3deg); letter-spacing:1px; }
 
 /* === EXPLORATEUR PAYS === */
 .country-search{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
@@ -284,8 +295,9 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:2rem;">
     <h2 class="st" style="margin-bottom:0;" data-i18n="d-title">DOSSIERS D'ANALYSE</h2>
     <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
-      <a href="https://www.facebook.com/profile.php?id=61589556124930" target="_blank" class="social-btn btn-fb" style="margin:0;" data-i18n="btn-fb-follow">Rejoindre sur Facebook</a>
-      <a href="https://www.linkedin.com/company/673-millions/" target="_blank" class="social-btn btn-in" style="margin:0;" data-i18n="btn-in-follow">Suivre sur LinkedIn</a>
+      <a href="https://x.com/673Millions" target="_blank" class="social-btn btn-x" style="margin:0;" data-i18n="btn-x-follow">Rejoindre sur X</a>
+      <a href="https://www.linkedin.com/company/116063968/" target="_blank" class="social-btn btn-in" style="margin:0;" data-i18n="btn-in-follow">Suivre sur LinkedIn</a>
+      <a href="https://www.facebook.com/profile.php?id=61589556124930" target="_blank" class="social-btn btn-fb" style="margin:0;" data-i18n="btn-fb-follow">Page Facebook</a>
     </div>
   </div>
   <div class="dossiers-grid">
@@ -426,6 +438,51 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   </div>
 </div>
 
+<div class="receipt-wrapper reveal" id="ticket-section">
+  <div class="sl" data-i18n="rec-tag">Viralité & Plaidoyer</div>
+  <h2 class="st" style="margin-bottom:0.5rem;" data-i18n="rec-title">LE TICKET DE L'HUMANITÉ</h2>
+  <p style="color:var(--dim); max-width:600px; margin:0 auto 2.5rem; text-align:center;" data-i18n="rec-desc">Générez et téléchargez le bilan financier de notre monde. Partagez ce ticket pour éveiller les consciences autour de vous.</p>
+  
+  <div class="receipt-paper" id="receipt-to-print">
+    <div class="r-header">
+      <div class="r-title">673 MILLIONS</div>
+      <div style="font-size:0.7rem; color:#666;" data-i18n="rec-sub">OBSERVATOIRE MONDIAL DES DONNÉES</div>
+      <div style="font-size:0.75rem; margin-top:0.5rem;" id="receipt-date">--/--/---- - --:--</div>
+    </div>
+    
+    <div style="margin-bottom:1rem; font-weight:bold; text-transform:uppercase; font-size:0.8rem;" data-i18n="rec-facture">FACTURE ANNUELLE (DÉPENSES)</div>
+    
+    <div class="r-row">
+      <span data-i18n="rec-i1">ARMEMENT (SIPRI)</span><span class="r-dots"></span><span>2 887 MDS$</span>
+    </div>
+    <div class="r-row">
+      <span data-i18n="rec-i2">GASPILLAGE (FAO)</span><span class="r-dots"></span><span>1 050 MDS$</span>
+    </div>
+    <div class="r-row">
+      <span data-i18n="rec-i3">IND. DU RÉGIME</span><span class="r-dots"></span><span>700 MDS$</span>
+    </div>
+    <div class="r-row">
+      <span data-i18n="rec-i4">TOURISME SPATIAL</span><span class="r-dots"></span><span>45 MDS$</span>
+    </div>
+    
+    <div class="r-total">
+      <span data-i18n="rec-tot">SOUS-TOTAL DÉPENSÉ</span><span>4 682 MDS$</span>
+    </div>
+    
+    <div style="text-align:center; font-size:0.85rem; color:#444;">
+      <span data-i18n="rec-cost">Coût pour éradiquer la faim :</span> <strong>93 MDS$</strong>
+    </div>
+    
+    <div class="r-status" data-i18n="rec-status">TRANSACTION REFUSÉE - PRIORITÉS REJETÉES</div>
+    
+    <div style="text-align:center; font-size:0.7rem; color:#888; margin-top:1.5rem;">
+      <div style="margin-bottom:0.3rem;">*** 673MILLIONS.ORG ***</div>
+      <div data-i18n="rec-foot">Données vérifiées - Objectif ODD 2</div>
+    </div>
+  </div>
+  
+  <button id="dl-receipt-btn" class="ctrl-btn" style="margin-top:2.5rem; padding:1rem 2.5rem; font-size:1rem; background:var(--gold); color:var(--navy); font-weight:bold;" onclick="downloadReceipt()" data-i18n="rec-btn">TÉLÉCHARGER CE TICKET (IMAGE)</button>
+</div>
 <div class="sw reveal" id="quiz-section" style="background:var(--navy2); border-top:1px solid var(--gold3);">
   <div class="sl" data-i18n="q-tag">Testez vos connaissances</div>
   <h2 class="st" data-i18n="q-title">LE DÉFI DES DONNÉES</h2>
@@ -479,7 +536,8 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 
       <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
         <a href="mailto:contact.673millions@gmail.com" class="social-btn" style="background:var(--navy); border:1px solid var(--gold); font-size:1rem;" data-i18n="ct-mail">📧 Nous écrire par Email</a>
-        <a href="https://www.linkedin.com/company/673-millions/" target="_blank" class="social-btn btn-in" style="font-size:1rem;">📱 Page LinkedIn</a>
+        <a href="https://x.com/673Millions" target="_blank" class="social-btn btn-x" style="font-size:1rem;">🐦 Page X (Twitter)</a>
+        <a href="https://www.linkedin.com/company/116063968/" target="_blank" class="social-btn btn-in" style="font-size:1rem;">📱 Page LinkedIn</a>
         <a href="https://www.facebook.com/profile.php?id=61589556124930" target="_blank" class="social-btn btn-fb" style="font-size:1rem;">👥 Page Facebook</a>
       </div>
     </div>
@@ -502,11 +560,14 @@ const dict = {
     "p2-tag": "ANIMAUX DOMESTIQUES", "p2-desc": "Le marché de la nourriture pour animaux dépasse largement les fonds nécessaires pour nourrir l'humanité.",
     "p3-tag": "TOURISME SPATIAL", "p3-desc": "On investit massivement pour quitter la Terre, pendant que ceux qui y restent peinent à se nourrir.",
     
-    // NOUVELLE SECTION FLOURISH
+    // SECTION FLOURISH
     "f-tag": "Preuve par l'image", "f-title": "LA COURSE DES PRIORITÉS (2015-2025)", "f-desc": "Découvrez en quelques secondes l'évolution vertigineuse de nos priorités mondiales. Pendant que le budget pour combattre la faim stagne, les dépenses militaires et le gaspillage explosent.", "f-source": "Sources certifiées : SIPRI (Armements) • FAO (Gaspillage) • PAM / ONU (Aide d'urgence)",
-    // -------------------------
+    
+    // SECTION TICKET DE CAISSE
+    "rec-tag": "Viralité & Plaidoyer", "rec-title": "LE TICKET DE L'HUMANITÉ", "rec-desc": "Générez et téléchargez le bilan financier de notre monde. Partagez ce ticket pour éveiller les consciences autour de vous.", "rec-sub": "OBSERVATOIRE MONDIAL DES DONNÉES", "rec-facture": "FACTURE ANNUELLE (DÉPENSES)", "rec-i1": "ARMEMENT (SIPRI)", "rec-i2": "GASPILLAGE (FAO)", "rec-i3": "IND. DU RÉGIME", "rec-i4": "TOURISME SPATIAL", "rec-tot": "SOUS-TOTAL DÉPENSÉ", "rec-cost": "Coût pour éradiquer la faim :", "rec-status": "TRANSACTION REFUSÉE - PRIORITÉS REJETÉES", "rec-foot": "Données vérifiées - Objectif ODD 2", "rec-btn": "TÉLÉCHARGER CE TICKET (IMAGE)",
 
-    "d-tag": "Investigations Hebdomadaires", "d-title": "DOSSIERS D'ANALYSE", "btn-fb-follow": "Rejoindre sur Facebook", "btn-in-follow": "Suivre sur LinkedIn",
+    "btn-fb-follow": "Page Facebook", "btn-in-follow": "Suivre sur LinkedIn", "btn-x-follow": "Rejoindre sur X",
+    "d-tag": "Investigations Hebdomadaires", "d-title": "DOSSIERS D'ANALYSE",
     "d1-tag": "À LA UNE", "d1-title": "La Spéculation Boursière", "d1-desc": "Comment les marchés financiers fixent le prix du blé. Le rôle mortifère des hedge funds.",
     "d2-tag": "ARCHIVE", "d2-title": "Le Piège de l'Importation", "d2-desc": "L'Afrique possède 60% des terres arables non cultivées mondiales, mais importe 50 Mds$. Pourquoi ?",
     "d3-tag": "ARCHIVE", "d3-title": "La Faim a un Genre", "d3-desc": "150 millions de femmes de plus que d'hommes souffrent de la faim. Les mécanismes structurels.",
@@ -524,7 +585,6 @@ const dict = {
     "pr-tag": "Analyse prospective", "pr-title": "PRÉDICTIONS 2030", "pr-btn-all": "Tous les scénarios", "pr-btn-bau": "Statu quo", "pr-btn-mod": "Modéré", "pr-btn-odd": "ODD 2",
     "q-tag": "Testez vos connaissances", "q-title": "LE DÉFI DES DONNÉES", "q-desc": "5 questions. 20 secondes par question. 3 erreurs et c'est Game Over. Arriverez-vous au bout ?", "q-start": "COMMENCER LE DÉFI", "q-count": "QUESTION", "q-share-msg": "Sensibilisez votre réseau avec ce chiffre :", "q-replay": "REJOUER",
     "ct-title": "CONTACT & ENGAGEMENT", "ct-desc": "Vous souhaitez utiliser nos données pour un article, une recherche ou un partenariat ? L'information doit circuler.", "ct-mail": "📧 Nous écrire par Email",
-    // Graph Labels
     "chart-bau": "Statu quo (BAU)", "chart-mod": "Modéré", "chart-odd": "ODD 2"
   },
   en: {
@@ -536,11 +596,14 @@ const dict = {
     "p2-tag": "PET FOOD", "p2-desc": "The pet food market vastly exceeds the funds needed to feed humanity.",
     "p3-tag": "SPACE TOURISM", "p3-desc": "We invest heavily to leave Earth, while those left behind struggle to eat.",
     
-    // NOUVELLE SECTION FLOURISH
+    // SECTION FLOURISH
     "f-tag": "Proof by Image", "f-title": "THE RACE OF PRIORITIES (2015-2025)", "f-desc": "Discover in a few seconds the staggering evolution of global priorities. While the budget to fight hunger stagnates, military spending and waste skyrocket.", "f-source": "Certified sources: SIPRI (Arms) • FAO (Waste) • WFP / UN (Emergency Aid)",
-    // -------------------------
+    
+    // SECTION TICKET DE CAISSE
+    "rec-tag": "Virality & Advocacy", "rec-title": "HUMANITY's RECEIPT", "rec-desc": "Generate and download our world's financial summary. Share this receipt to raise awareness.", "rec-sub": "GLOBAL DATA OBSERVATORY", "rec-facture": "ANNUAL BILL (EXPENSES)", "rec-i1": "MILITARY (SIPRI)", "rec-i2": "FOOD WASTE (FAO)", "rec-i3": "DIET INDUSTRY", "rec-i4": "SPACE TOURISM", "rec-tot": "SUBTOTAL SPENT", "rec-cost": "Cost to end world hunger:", "rec-status": "TRANSACTION DENIED - PRIORITIES REJECTED", "rec-foot": "Verified data - SDG 2 Goal", "rec-btn": "DOWNLOAD THIS RECEIPT (IMAGE)",
 
-    "d-tag": "Weekly Investigations", "d-title": "ANALYSIS DOSSIERS", "btn-fb-follow": "Join on Facebook", "btn-in-follow": "Follow on LinkedIn",
+    "btn-fb-follow": "Facebook Page", "btn-in-follow": "Follow on LinkedIn", "btn-x-follow": "Join on X",
+    "d-tag": "Weekly Investigations", "d-title": "ANALYSIS DOSSIERS", 
     "d1-tag": "FEATURED", "d1-title": "Stock Speculation", "d1-desc": "How financial markets fix wheat prices. The deadly role of hedge funds.",
     "d2-tag": "ARCHIVE", "d2-title": "The Import Trap", "d2-desc": "Africa has 60% of global uncultivated arable land, yet imports $50Bn of food.",
     "d3-tag": "ARCHIVE", "d3-title": "Hunger is Gendered", "d3-desc": "150 million more women than men suffer from hunger. Structural mechanisms.",
@@ -569,11 +632,14 @@ const dict = {
     "p2-tag": "MASCOTAS", "p2-desc": "El mercado de mascotas supera los fondos para alimentar a la humanidad.",
     "p3-tag": "TURISMO ESPACIAL", "p3-desc": "Invertimos masivamente para salir de la Tierra, mientras otros mueren de hambre.",
     
-    // NOUVELLE SECTION FLOURISH
-    "f-tag": "Prueba visual", "f-title": "LA CARRERA DE PRIORIDADES (2015-2025)", "f-desc": "Descubra en segundos la vertiginosa evolución de las prioridades mundiales. Mientras el presupuesto contra el hambre se estanca, el gasto militar y el desperdicio se disparan.", "f-source": "Fuentes certificadas: SIPRI (Armas) • FAO (Desperdicio) • PMA / ONU (Ayuda de emergencia)",
-    // -------------------------
+    // SECTION FLOURISH
+    "f-tag": "Prueba visual", "f-title": "LA CARRERA DE PRIORIDADES (2015-2025)", "f-desc": "Descubra en segundos la vertiginosa evolución de las prioridades mundiales. Mientras el presupuesto contra el hambre se estanca, el gasto militar y el desperdicio se disparan.", "f-source": "Fuentes certificadas: SIPRI (Armas) • FAO (Desperdicio) • PMA / ONU (Ayuda)",
+    
+    // SECTION TICKET DE CAISSE
+    "rec-tag": "Viralidad y Defensa", "rec-title": "EL RECIBO DE LA HUMANIDAD", "rec-desc": "Genere y descargue el balance financiero de nuestro mundo. Comparta este recibo para concienciar.", "rec-sub": "OBSERVATORIO MUNDIAL DE DATOS", "rec-facture": "FACTURA ANUAL (GASTOS)", "rec-i1": "ARMAMENTO (SIPRI)", "rec-i2": "DESPERDICIO (FAO)", "rec-i3": "IND. DE LA DIETA", "rec-i4": "TURISMO ESPACIAL", "rec-tot": "SUBTOTAL GASTADO", "rec-cost": "Costo para erradicar el hambre:", "rec-status": "TRANSACCIÓN DENEGADA - PRIORIDADES RECHAZADAS", "rec-foot": "Datos verificados - Objetivo ODS 2", "rec-btn": "DESCARGAR ESTE RECIBO (IMAGEN)",
 
-    "d-tag": "Investigaciones", "d-title": "DOSSIERS DE ANÁLISIS", "btn-fb-follow": "Únete en Facebook", "btn-in-follow": "Sigue en LinkedIn",
+    "btn-fb-follow": "Página Facebook", "btn-in-follow": "Sigue en LinkedIn", "btn-x-follow": "Únete en X",
+    "d-tag": "Investigaciones", "d-title": "DOSSIERS DE ANÁLISIS",
     "d1-tag": "DESTACADO", "d1-title": "Especulación Bursátil", "d1-desc": "Cómo los mercados fijan el precio del trigo. El rol de los fondos de cobertura.",
     "d2-tag": "ARCHIVO", "d2-title": "Trampa de Importación", "d2-desc": "África tiene 60% de tierra no cultivada, pero importa 50 Mds$.",
     "d3-tag": "ARCHIVO", "d3-title": "El Hambre tiene Género", "d3-desc": "150M más de mujeres que hombres sufren hambre. Mecanismos estructurales.",
@@ -596,7 +662,7 @@ const dict = {
 };
 let currentLang = 'fr';
 
-// --- INITIALISATION (COMPTEURS HERO ET LIVE) ---
+// --- INITIALISATION ---
 document.addEventListener("DOMContentLoaded", () => {
   const el = document.getElementById('heroCounter');
   const target = 673000000;
@@ -625,6 +691,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
   calcImpact();
   buildTimeline();
+  
+  // Update Receipt Date
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fr-FR') + ' - ' + now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+  if(document.getElementById('receipt-date')) document.getElementById('receipt-date').textContent = dateStr;
 });
 
 function updateLiveCounters() {
@@ -651,7 +722,7 @@ function switchLang(lang) {
     else if(dict['en'][key]) el.innerHTML = dict['en'][key];
   });
   document.getElementById('cSearch').placeholder = dict[lang]['search-ph'] || dict['fr']['search-ph'];
-  calcImpact(); // update translation inside JS
+  calcImpact();
   
   if(predChart) {
     predChart.data.datasets[1].label = dict[lang]["chart-bau"] || "Statu quo";
@@ -682,6 +753,31 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane, .tab-btn').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
+}
+
+// --- TÉLÉCHARGEMENT DU TICKET ---
+function downloadReceipt() {
+  const btn = document.getElementById('dl-receipt-btn');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = "GÉNÉRATION... ⏳";
+  btn.disabled = true;
+
+  const target = document.getElementById('receipt-to-print');
+  
+  // html2canvas prend une "photo" de la div et la télécharge
+  html2canvas(target, { scale: 3, backgroundColor: null }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'ticket-humanite-673millions.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }).catch(err => {
+    console.error("Erreur génération image", err);
+    btn.innerHTML = "ERREUR (RÉESSAYER)";
+    btn.disabled = false;
+  });
 }
 
 // --- TIMELINE BUILDER ---
@@ -724,7 +820,9 @@ function project2030() {
 
 // --- CARTE JSVECTOR MAP ---
 document.addEventListener("DOMContentLoaded", function() {
-  const hungerMapData = {"CD":41,"MG":39,"CF":45,"TD":37,"HT":47,"YE":45,"SO":48,"CI":11,"SN":9,"ML":21,"BF":23,"NE":42,"NG":12,"CM":10,"IN":16,"BD":11,"PK":20,"FR":2,"US":2};
+  // AJOUT DE 18 PAYS SUPPLÉMENTAIRES (Même format, ultra léger pour la vitesse)
+  const hungerMapData = {"CD":41,"MG":39,"CF":45,"TD":37,"HT":47,"YE":45,"SO":48,"CI":11,"SN":9,"ML":21,"BF":23,"NE":42,"NG":12,"CM":10,"IN":16,"BD":11,"PK":20,"FR":2,"US":2, "AF":30, "VE":22, "KP":41, "ZW":38, "SD":35, "SS":46, "SY":25, "IQ":15, "GN":17, "LR":38, "SL":26, "MZ":31, "AO":14, "ZM":29, "MW":18, "ET":16, "KE":23, "UG":15};
+  
   new jsVectorMap({
     selector: "#map-container", map: "world", backgroundColor: "transparent",
     regionStyle: { initial: { fill: "#2a3b54", stroke: "rgba(255,255,255,0.1)" }, hover: { fill: "#C9A84C" } },
@@ -732,7 +830,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-// --- PAYS (4 par défaut sur mobile) ---
+// --- PAYS ---
 const cDB = {
   "cote d'ivoire": {n:"Côte d'Ivoire", h:"11,7%", c:"6,2%", stat:"Amélioration continue"},
   "senegal": {n:"Sénégal", h:"9,8%", c:"5,1%", stat:"Investissement agricole fort"},
@@ -757,7 +855,6 @@ function liveSearch() {
   const q = document.getElementById('cSearch').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   const res = document.getElementById('cResults');
   if(q.length === 0) {
-    // Affiche seulement 4 pays quand la barre est vide
     res.innerHTML = ["cote d'ivoire", "rdc", "madagascar", "mali"].map(k => makeCard(k)).join('');
     return;
   }
@@ -768,7 +865,6 @@ function liveSearch() {
       res.innerHTML = `<div class="c-card" style="border-color:var(--dim)"><div class="c-name">${q.charAt(0).toUpperCase() + q.slice(1)}</div><div style="font-size:0.8rem;color:var(--dim);margin-top:1rem;">⏳ <strong>${auditText}</strong></div></div>`; 
   }
 }
-// Affiche les 4 pays au tout premier chargement du site
 document.getElementById('cResults').innerHTML = ["cote d'ivoire", "rdc", "madagascar", "mali"].map(k => makeCard(k)).join('');
 
 // --- IMPACT PERSONNEL GAMIFIÉ ---
