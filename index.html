@@ -20,6 +20,38 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-GVV6NSFQQ9');
+
+  // =================================================================================
+  // 🛡️ COUP DE GÉNIE : PROTECTION DU WIDGET (IFRAME MODE)
+  // Si l'URL contient "?widget=true", on affiche UNIQUEMENT le compteur sécurisé.
+  // =================================================================================
+  if(window.location.search.includes('widget=true')) {
+    document.write(`
+      <style>
+        body { margin:0; padding:0; background:transparent; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; font-family:sans-serif; }
+        .w-box { border:1px solid #C9A84C; padding:15px 20px; text-align:center; background:#0d1d35; color:#fff; border-radius:8px; width:100%; max-width:300px; box-sizing:border-box; box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+        .w-title { font-weight:bold; font-size:1.3rem; margin-bottom:8px; color:#C9A84C; letter-spacing:1px; font-family:'Bebas Neue', sans-serif;}
+        .w-sub { font-size:0.8rem; margin-bottom:5px; color:rgba(255,255,255,0.7); }
+        .w-val { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:#e05252; margin:5px 0 15px 0; line-height:1; }
+        .w-btn { display:inline-block; color:#0d1d35; background:#C9A84C; font-weight:bold; text-decoration:none; font-size:0.75rem; padding:8px 15px; border-radius:4px; transition:0.3s; }
+        .w-btn:hover { background:#fff; }
+      </style>
+      <div class="w-box">
+        <div class="w-title">673 MILLIONS</div>
+        <div class="w-sub">Repas gaspillés aujourd'hui :</div>
+        <div class="w-val" id="w-val">0</div>
+        <a href="https://673millions.org" target="_blank" class="w-btn">Soutenir l'Observatoire</a>
+      </div>
+      <script>
+        setInterval(() => {
+          let n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()), s=(n-m)/1000;
+          document.getElementById('w-val').innerText=Math.floor(s*66590).toLocaleString('fr-FR');
+        }, 1000);
+      <\/script>
+    `);
+    document.close();
+    window.stop(); // Stoppe le chargement du reste de la page pour le widget
+  }
 </script>
 
 <style>
@@ -136,6 +168,8 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 .country-input:focus{outline:none;border-color:var(--gold);}
 .country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;}
 .c-card{background:var(--navy3);padding:1.5rem;border-left:3px solid var(--gold);border-radius:4px;}
+.c-name{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;margin-bottom:0.5rem;}
+.c-stat{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--dim);border-bottom:1px solid var(--low);padding:0.4rem 0;}
 
 /* === PREDICTIONS === */
 .pred-controls{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
@@ -184,6 +218,10 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
 .dossier-card:hover{border-color:var(--gold);transform:translateY(-5px);}
 .contact-box {background:linear-gradient(45deg, var(--navy2), var(--navy3));border:1px solid var(--gold);padding:3rem 1.5rem;text-align:center;border-radius:8px;}
 .newsletter-input {padding:1rem; width:100%; max-width:300px; background:var(--navy); border:1px solid var(--low); color:var(--white); border-radius:4px; margin-bottom:1rem; font-family:'DM Mono',monospace;}
+
+/* === WIDGET CACHÉ === */
+.widget-copy-box { background:var(--navy3); border:1px solid var(--low); border-radius:4px; padding:1.5rem; position:relative; margin-top:1.5rem; text-align:left; display:none; }
+.widget-copy-btn { position:absolute; top:10px; right:10px; background:var(--gold); color:var(--navy); border:none; padding:0.4rem 0.8rem; border-radius:4px; font-weight:bold; cursor:pointer; font-family:'DM Mono', monospace; font-size:0.7rem; transition:0.3s; }
 
 @media(max-width:768px){
   nav{padding:1rem; flex-wrap:wrap;}
@@ -593,19 +631,19 @@ select.ctrl-btn { appearance:none; padding-right:1.5rem; background-image: url('
   <div class="sl" data-i18n="w-tag">Diffusez l'alerte sur votre site</div>
   <h2 class="st" data-i18n="w-title">OUTIL POUR WEBMASTERS & BLOGS</h2>
   <p style="color:var(--dim); margin-bottom:1.5rem; max-width:800px; font-size:0.95rem;" data-i18n="w-desc">
-    Vous gérez un site web, un blog ou le portail d'une ONG ? Copiez simplement le code ci-dessous et collez-le sur votre page. Il affichera notre compteur de gaspillage en temps réel pour sensibiliser vos visiteurs.
+    Vous gérez un site web, un blog ou le portail d'une ONG ? Copiez simplement le code ci-dessous et collez-le sur votre page. Il affichera notre compteur de gaspillage en temps réel de façon totalement sécurisée pour sensibiliser vos visiteurs.
   </p>
   
-  <textarea readonly style="width:100%; box-sizing:border-box; height:180px; background:var(--navy3); color:var(--gold); border:1px solid var(--low); padding:1rem; font-family:'DM Mono', monospace; font-size:0.75rem; border-radius:4px; resize:none; cursor:pointer;" onclick="this.select()" title="Cliquez pour tout sélectionner">
-<div style="border:1px solid #C9A84C; padding:15px; text-align:center; background:#0A1628; color:#fff; font-family:sans-serif; border-radius:6px; max-width:300px; margin:0 auto;">
-  <div style="font-weight:bold; font-size:1.2em; margin-bottom:10px; color:#C9A84C; letter-spacing:1px;">673 MILLIONS</div>
-  <div style="font-size:0.9em; margin-bottom:5px;">Repas gaspillés aujourd'hui :</div>
-  <div id="w-673-waste" style="font-size:1.6em; font-weight:bold; color:#e05252; margin-bottom:15px;">0</div>
-  <a href="https://673millions.org" target="_blank" style="color:#C9A84C; text-decoration:none; font-size:0.8em; border:1px solid #C9A84C; padding:6px 12px; border-radius:3px; transition:0.3s;">Découvrir l'Observatoire</a>
-</div>
-<script>setInterval(()=>{let n=new Date();let m=new Date(n.getFullYear(),n.getMonth(),n.getDate());let s=(n-m)/1000;document.getElementById('w-673-waste').innerText=Math.floor(s*66590).toLocaleString('fr-FR');},1000);</script>
-</textarea>
-  <p style="font-size:0.7rem; color:var(--dim); margin-top:0.5rem; font-style:italic;" data-i18n="w-warn">100% autonome, ultra-léger. Aucune base de données requise sur votre serveur.</p>
+  <button class="ctrl-btn" id="btn-show-widget" onclick="document.getElementById('widget-ui').style.display='block'; this.style.display='none';">OBTENIR LE CODE DU WIDGET</button>
+  
+  <div id="widget-ui" class="widget-copy-box">
+    <textarea id="widget-code" readonly style="width:100%; height:90px; background:transparent; border:none; color:var(--gold); font-family:'DM Mono',monospace; font-size:0.8rem; resize:none; outline:none;" onclick="this.select()">
+<iframe src="https://673millions.org/?widget=true" width="100%" height="220" style="border:none; border-radius:8px; max-width:320px;" title="Compteur 673 Millions"></iframe>
+    </textarea>
+    <button class="widget-copy-btn" onclick="copyWidgetCode()" id="copy-btn-txt">COPIER LE CODE</button>
+  </div>
+  
+  <p style="font-size:0.7rem; color:var(--dim); margin-top:1rem; font-style:italic;" data-i18n="w-warn">Code protégé via iframe. 100% autonome et sécurisé. Aucune charge sur votre serveur.</p>
 </div>
 
 <div style="border-top:1px solid var(--gold3);" class="reveal" id="contact">
@@ -680,11 +718,11 @@ const dict = {
     "q-tag": "Jeu : Testez votre instinct", "q-title": "MYTHE OU RÉALITÉ ?", "q-desc": "Découvrez si vous connaissez vraiment le monde dans lequel on vit. C'est rapide, instructif, et vous pourriez être choqué. 3 erreurs et c'est Game Over !", "q-start": "JOUER MAINTENANT 🎮", "q-count": "QUESTION", "q-share-msg": "Partagez votre score et alertez vos amis :", "q-auto-txt": "Le texte se rédigera automatiquement dans votre application.", "q-replay": "REJOUER",
     
     // WIDGET
-    "w-tag": "Diffusez l'alerte sur votre site", "w-title": "OUTIL POUR WEBMASTERS & BLOGS", "w-desc": "Vous gérez un site web, un blog ou le portail d'une ONG ? Copiez simplement le code ci-dessous et collez-le sur votre page. Il affichera notre compteur de gaspillage en temps réel pour sensibiliser vos visiteurs.", "w-warn": "100% autonome, ultra-léger. Aucune base de données requise sur votre serveur.",
+    "w-tag": "Diffusez l'alerte sur votre site", "w-title": "OUTIL POUR WEBMASTERS & BLOGS", "w-desc": "Vous gérez un site web, un blog ou le portail d'une ONG ? Copiez simplement le code ci-dessous et collez-le sur votre page. Il affichera notre compteur de gaspillage en temps réel de façon totalement sécurisée pour sensibiliser vos visiteurs.", "w-warn": "Code protégé via iframe. 100% autonome et sécurisé. Aucune charge sur votre serveur.",
 
     "ct-title": "CONTACT & ENGAGEMENT", "ct-desc": "Vous souhaitez utiliser nos données pour un article, une recherche ou un partenariat ? L'information doit circuler.", "ct-news": "S'INSCRIRE À LA NEWSLETTER", "ct-mail": "📧 Nous écrire par Email", "ct-x": "🐦 Page X (Twitter)", "ct-in": "📱 Page LinkedIn", "ct-fb": "👥 Page Facebook",
     "chart-bau": "Statu quo BAU (%)", "chart-mod": "Modéré", "chart-odd": "ODD 2",
-    "st-1": "GARDIEN DE LA TERRE 🌍", "st-2": "CONSOMMATEUR AVERTI 🧐", "st-3": "CITOYEN PERFECTIBLE ⚖️", "st-4": "GASPIILLEUR AMATEUR 😬", "st-5": "DANGER ÉCOLOGIQUE 🚨", "st-6": "MINISTRE DU GASPILLAGE 🗑️👑"
+    "st-1": "GARDIEN DE LA TERRE 🌍", "st-2": "CONSOMMATEUR AVERTI 🧐", "st-3": "CITOYEN PERFECTIBLE ⚖️", "st-4": "GASPIILLEUR AMATEUR 😬", "st-5": "DANGER ÉCOLOGIQUE 🚨", "st-6": "MINISTRO DU GASPILLAGE 🗑️👑"
   },
   en: {
     "nav-logo": "MILLION", "nav-para": "Paradoxes", "nav-dos": "Dossiers", "nav-odd": "SDG 2", "nav-pays": "Countries", "nav-imp": "Profile", "nav-quiz": "Game",
@@ -722,7 +760,7 @@ const dict = {
     "pr-tag": "Prospective Analysis", "pr-title": "2030 PREDICTIONS", "pr-btn-all": "All Scenarios", "pr-btn-bau": "Status quo", "pr-btn-mod": "Moderate", "pr-btn-odd": "SDG 2",
     "q-tag": "Game: Test your instinct", "q-title": "MYTH OR REALITY?", "q-desc": "Find out if you really know the world we live in. Fast, informative, and you might be shocked. 3 errors = Game Over!", "q-start": "PLAY NOW 🎮", "q-count": "QUESTION", "q-share-msg": "Share your score and alert your friends:", "q-auto-txt": "The text will be written automatically in your app.", "q-replay": "REPLAY",
     
-    "w-tag": "Spread the alert on your site", "w-title": "TOOL FOR WEBMASTERS & BLOGS", "w-desc": "Do you manage a website, a blog, or an NGO portal? Simply copy the code below and paste it on your page. It will display our real-time waste counter.", "w-warn": "100% autonomous, ultra-light. No database required on your server.",
+    "w-tag": "Spread the alert on your site", "w-title": "TOOL FOR WEBMASTERS & BLOGS", "w-desc": "Do you manage a website, a blog, or an NGO portal? Simply copy the code below and paste it on your page. It will display our real-time waste counter securely.", "w-warn": "Code protected via iframe. 100% autonomous and secure. No database required on your server.",
 
     "ct-title": "CONTACT & ENGAGEMENT", "ct-desc": "Want to use our data for an article or partnership? Information must flow.", "ct-news": "SUBSCRIBE TO NEWSLETTER", "ct-mail": "📧 Email Us", "ct-x": "🐦 X (Twitter)", "ct-in": "📱 LinkedIn Page", "ct-fb": "👥 Facebook Page",
     "chart-bau": "Status quo (BAU)", "chart-mod": "Moderate", "chart-odd": "SDG 2",
@@ -752,9 +790,9 @@ const dict = {
     "odd-l3": "2.3 — Productividad agrícola", "odd-v3": "+18% desde 2015", "stat-slow": "LENTO",
     "odd-l4": "2.a — Inversiones agrícolas", "odd-v4": "4% PIB prom.",
     "c-tag": "Análisis Macro", "c-title": "EVOLUCIÓN MUNDIAL", "chart-1-title": "EVOLUCIÓN HAMBRE MUNDIAL (MILLONES)", "chart-1-desc": "Historial del hambre vs Proyección BAU.", "chart-2-title": "DISTRIBUCIÓN POR REGIÓN (M)", "chart-2-desc": "¿Dónde viven los 673 millones de hambrientos?", "tab-c": "Gráficos", "tab-t": "Timeline Histórico",
-    "map-tag": "Mapeo de Emergencia", "map-title": "EL MAPA DEL HAMBRE", "map-desc": "Pase el ratón por un país para ver la proporción de subalimentación.", "map-click": "👆 Tocar para explorar el mapa mundial",
+    "map-tag": "Mapeo de Emergencia", "map-title": "EL MAPA DEL HAMBRE", "map-desc": "Pase el ratón por un país para ver el porcentaje exacto de subalimentación.", "map-click": "👆 Tocar para explorar el mapa mundial",
     "leg-1": "Seguro (< 5%)", "leg-2": "Vulnerable (5% - 15%)", "leg-3": "Emergencia (> 15%)", "leg-4": "En Auditoría",
-    "e-tag": "Datos por País", "e-title": "EXPLORADOR MUNDIAL", "e-sub": "BASE ENRIQUECIDA. ESCRIBA UN NOMBRE.", "search-ph": "Ej: Francia, Brasil, Mali, India...",
+    "e-tag": "Datos por País", "e-title": "EXPLORADOR MUNDIAL", "e-sub": "BASE ENRIQUECIDA (195 PAÍSES). ESCRIBA UN NOMBRE.", "search-ph": "Ej: Francia, Brasil, Mali, India...",
     
     "sim-tag": "Simulación Interactiva", "sim-title": "¿Y SI GOBERNARAS EL MUNDO?", "sim-desc": "Tu misión: Encontrar 93 Mds $ para erradicar el hambre. Desliza para reasignar presupuestos.",
     "sim-obj": "PRESUPUESTO HAMBRE CERO:", "sim-out": "/ 93 MDS $", "sim-arm": "Armamento global:", "sim-gasp": "Desperdicio:", "sim-reg": "Industria de Dieta:", "sim-vic": "<strong>🎉 ¡MISIÓN CUMPLIDA!</strong><br>Al reducir estos presupuestos, salvaste 673 millones de vidas. El dinero existe.",
@@ -763,7 +801,7 @@ const dict = {
     "pr-tag": "Análisis prospectivo", "pr-title": "PREDICCIONES 2030", "pr-btn-all": "Todos", "pr-btn-bau": "Status quo", "pr-btn-mod": "Moderado", "pr-btn-odd": "ODS 2",
     "q-tag": "Juego: Pruebe su instinto", "q-title": "¿MITO O REALIDAD?", "q-desc": "Descubra si conoce el mundo. Rápido, informativo. 3 errores = Game Over!", "q-start": "JUGAR AHORA 🎮", "q-count": "PREGUNTA", "q-share-msg": "Comparta su puntuación y alerte a sus amigos:", "q-auto-txt": "El texto se escribirá automáticamente en su aplicación.", "q-replay": "VOLVER A JUGAR",
     
-    "w-tag": "Difunda la alerta", "w-title": "HERRAMIENTA PARA BLOGS", "w-desc": "¿Gestionas una web o blog? Copia el código abajo para mostrar nuestro contador en tiempo real.", "w-warn": "100% autónomo, ultraligero. Sin base de datos en su servidor.",
+    "w-tag": "Difunda la alerta", "w-title": "HERRAMIENTA PARA BLOGS", "w-desc": "¿Gestionas una web o blog? Copia el código abajo para mostrar nuestro contador en tiempo real de forma segura.", "w-warn": "Código protegido via iframe. 100% autónomo y seguro. Sin base de datos en su servidor.",
 
     "ct-title": "CONTACTO Y COMPROMISO", "ct-desc": "¿Desea usar nuestros datos para un artículo? La info debe fluir.", "ct-news": "SUSCRIBIRSE", "ct-mail": "📧 Escríbanos", "ct-x": "🐦 X (Twitter)", "ct-in": "📱 LinkedIn", "ct-fb": "👥 Facebook",
     "chart-bau": "Status quo", "chart-mod": "Moderado", "chart-odd": "ODS 2",
@@ -791,7 +829,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   calcImpact();
   buildTimeline();
-  calcSim(); // Init Simulateur
+  calcSim(); 
   
   const now = new Date();
   const dateStr = now.toLocaleDateString('fr-FR') + ' - ' + now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
@@ -808,7 +846,7 @@ function switchLang(lang) {
       else el.innerHTML = dict[lang][key];
     }
   });
-  calcImpact(); // Update status language
+  calcImpact(); 
   
   if(predChart) {
     predChart.data.datasets[1].label = dict[lang]["chart-bau"] || "Statu quo";
@@ -821,8 +859,6 @@ function switchLang(lang) {
     if (qIdx < quizData.length) {
         document.getElementById("quizScoreCount").textContent = `${dict[currentLang]["q-count"]} ${qIdx+1} / 5`;
         document.getElementById("quizQuestion").textContent = quizData[qIdx].q[currentLang] || quizData[qIdx].q.fr;
-        
-        // Mettre à jour les boutons sans casser la logique de victoire
         const optsDiv = document.getElementById("quizOptions");
         const btns = optsDiv.querySelectorAll(".quiz-btn");
         const opts = quizData[qIdx].o[currentLang] || quizData[qIdx].o.fr;
@@ -861,6 +897,23 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab-pane, .tab-btn').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
+}
+
+// --- WIDGET COPIE AUTOMATIQUE ---
+function copyWidgetCode() {
+  const code = document.getElementById('widget-code');
+  const btn = document.getElementById('copy-btn-txt');
+  code.select();
+  navigator.clipboard.writeText(code.value).then(() => {
+    btn.innerHTML = "✓ CODE COPIÉ !";
+    btn.style.background = "var(--green)";
+    btn.style.color = "var(--white)";
+    setTimeout(() => {
+      btn.innerHTML = "COPIER LE CODE";
+      btn.style.background = "var(--gold)";
+      btn.style.color = "var(--navy)";
+    }, 3000);
+  });
 }
 
 // --- TÉLÉCHARGEMENT DU TICKET ---
@@ -925,7 +978,7 @@ function project2030() {
   }
 }
 
-// --- CARTE JSVECTOR MAP (TOUS LES PAYS AVEC COULEURS STRICTES) ---
+// --- CARTE JSVECTOR MAP (COULEURS STRICTES ASSURÉES) ---
 const hungerMapData = {
   // Amériques
   "US":2, "CA":2, "MX":6, "GT":8, "CU":4, "HN":15, "SV":13, "NI":10, "CR":12, "PA":4, "HT":47, "DO":6, "JM":6,
@@ -941,6 +994,15 @@ const hungerMapData = {
   "AU":2, "NZ":2, "PG":12, "FJ":4
 };
 
+// La magie pour obliger JSVectorMap à faire des blocs de couleurs stricts (pas de dégradé)
+const mapCategoryData = {};
+for(let code in hungerMapData) {
+  let val = hungerMapData[code];
+  if(val < 5) mapCategoryData[code] = 1;
+  else if(val <= 15) mapCategoryData[code] = 2;
+  else mapCategoryData[code] = 3;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   new jsVectorMap({
     selector: "#map-container", 
@@ -950,9 +1012,12 @@ document.addEventListener("DOMContentLoaded", function() {
       initial: { fill: "#111f38", stroke: "rgba(255,255,255,0.1)" }, 
       hover: { fill: "#ffffff" } 
     },
-    visualizeData: {
-      scale: ["#52c078", "#C9A84C", "#e05252"], 
-      values: hungerMapData
+    series: {
+      regions: [{
+        attribute: 'fill',
+        scale: { 1: "#52c078", 2: "#C9A84C", 3: "#e05252" },
+        values: mapCategoryData
+      }]
     },
     onRegionTooltipShow(event, tooltip, code) {
       let val = hungerMapData[code];
